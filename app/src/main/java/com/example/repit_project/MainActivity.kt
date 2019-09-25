@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@MainActivity)
             quizAdapter = QuizAdapter()
             adapter = quizAdapter
+            
         }
     }
 
