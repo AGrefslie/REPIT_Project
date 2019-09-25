@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    android:background="#e6e6e6">
+
+    <ImageView
+        android:id="@+id/quiz_image"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/ic_launcher_background"
+        android:scaleType="centerCrop"
+        android:contentDescription="TODO" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title"
+        android:id="@+id/quiz_title"
+        android:textSize="24sp"
+        android:layout_margin="10dp"
+        android:layout_below="@id/quiz_image">
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/description"
+        android:id="@+id/quiz_description"
+        android:layout_margin="10dp"
+        android:layout_below="@id/quiz_title">
+    </TextView>
+
+    <Button
+        android:id="@+id/startTestBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/quiz_title"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="false"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:onClick="startTest"
+        android:textColor="@color/colorPrimary"
+        android:background="#fff"
+        android:padding="10dp"
+        android:text="@string/start_test" />
+</RelativeLayout>
