@@ -11,8 +11,8 @@
         android:title="@string/collections"/>
 
     <item
-        android:id="@+id/nav_share"
+        android:id="@+id/nav_user"
         android:icon="@drawable/ic_user"
-        android:title="@string/user"/>
+        android:title="@string/user" />
 
 </menu>

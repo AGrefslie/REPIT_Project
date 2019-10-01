@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "406608408212",
+    "firebase_url": "https://repit-8cd2b.firebaseio.com",
+    "project_id": "repit-8cd2b",
+    "storage_bucket": "repit-8cd2b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:406608408212:android:96d51c1011cd58fc340e81",
+        "android_client_info": {
+          "package_name": "com.example.repit_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "406608408212-iurt624qqm91jonm6l6skk7ce5vilb87.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.repit_project",
+            "certificate_hash": "801107ee006c903c957eafe6c2024dbfaa894b41"
+          }
+        },
+        {
+          "client_id": "406608408212-cqk0euo0rtbgsc3c65a1kvssn9bfsco8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqGDxtQQHKdkc26zqypR7VjinNxCHqMr4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "406608408212-cqk0euo0rtbgsc3c65a1kvssn9bfsco8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

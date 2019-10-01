@@ -7,7 +7,7 @@
     android:layout_margin="20dp"
     android:outlineProvider="bounds"
     android:clipToPadding="false"
-    android:background="@android:color/white">
+    android:background="#e6e6e6">
 
     <ImageView
         android:id="@+id/quiz_image"
