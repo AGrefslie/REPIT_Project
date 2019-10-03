@@ -1,4 +1,7 @@
-package com.example.repit_project.Models
+package com.example.repit_project.Data
+
+import com.example.repit_project.Models.Question
+import com.example.repit_project.Models.Quiz
 
 class TestData {
 
@@ -9,12 +12,16 @@ class TestData {
             var quizList = ArrayList<Question>()
 
             quizList.add(
-                Question("Hva er HEI på spansk",
-                    "Hola")
+                Question(
+                    "Hva er HEI på spansk",
+                    "Hola"
+                )
             )
             quizList.add(
-                Question("Hva er HEI på Engelsk",
-                    "Hello")
+                Question(
+                    "Hva er HEI på Engelsk",
+                    "Hello"
+                )
             )
 
             val list = ArrayList<Quiz>()
