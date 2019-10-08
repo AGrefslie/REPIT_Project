@@ -2,4 +2,26 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph" />
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/destination_home">
+    <fragment
+        android:id="@+id/destination_home"
+        android:name="com.example.repit_project.home_fragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home"
+        app:startDestination="@id/toUserAction">
+        <action
+            android:id="@+id/toUserAction"
+            app:destination="@id/destination_user" />
+    </fragment>
+    <fragment
+        android:id="@+id/destination_user"
+        android:name="com.example.repit_project.user_fragment"
+        android:label="fragment_user"
+        tools:layout="@layout/fragment_user" />
+    <fragment
+        android:id="@+id/destination_createTest"
+        android:name="com.example.repit_project.create_test_fragment"
+        android:label="create_test"
+        tools:layout="@layout/create_test" />
+</navigation>
