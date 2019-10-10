@@ -8,7 +8,11 @@
         android:id="@+id/destination_home"
         android:name="com.example.repit_project.home_fragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home">
+        tools:layout="@layout/fragment_home"
+        app:startDestination="@id/toUserAction">
+        <action
+            android:id="@+id/toUserAction"
+            app:destination="@id/destination_user" />
     </fragment>
     <fragment
         android:id="@+id/destination_user"
@@ -20,9 +24,4 @@
         android:name="com.example.repit_project.create_test_fragment"
         android:label="create_test"
         tools:layout="@layout/create_test" />
-    <fragment
-        android:id="@+id/destination_collections"
-        android:name="com.example.repit_project.collections_fragment"
-        android:label="fragment_collections"
-        tools:layout="@layout/fragment_collections" />
 </navigation>
