@@ -10,8 +10,9 @@ import com.example.repit_project.Models.Quiz
 import com.example.repit_project.R
 import kotlinx.android.synthetic.main.layout_listitem.view.*
 
-class QuizAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var items : List<Quiz> = ArrayList()
+class QuizAdapter(private val list: List<Quiz>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var items : List<Quiz> = list
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return QuizViewHolder(

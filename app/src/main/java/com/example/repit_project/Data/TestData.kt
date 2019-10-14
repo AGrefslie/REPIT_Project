@@ -5,11 +5,16 @@ import com.example.repit_project.Models.Quiz
 
 class TestData {
 
+
+
     companion object {
+
+        val list = ArrayList<Quiz>()
+        var quizList = ArrayList<Question>()
 
         fun createDataSet(): ArrayList<Quiz> {
 
-            var quizList = ArrayList<Question>()
+
 
             quizList.add(
                 Question(
@@ -23,8 +28,6 @@ class TestData {
                     "Hello"
                 )
             )
-
-            val list = ArrayList<Quiz>()
 
             list.add(
                 Quiz(
