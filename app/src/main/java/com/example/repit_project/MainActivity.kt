@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.navigation.NavController
@@ -13,8 +12,8 @@ import androidx.navigation.ui.NavigationUI
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import java.util.zip.Inflater
+import kotlinx.android.synthetic.main.fragment_user.*
+import kotlinx.android.synthetic.main.layout_listitem.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -55,7 +54,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         firebaseAuth.addAuthStateListener(authStateListener)
-
     }
 
     override fun onPause() {
@@ -78,9 +76,6 @@ class MainActivity : AppCompatActivity() {
                         .build(), RC_SIGN_IN
                 )
             }
-            else {
-                userNameText.text = "Signed in as " + firebaseUser?.displayName
-            }
         }
     }
 
@@ -91,7 +86,6 @@ class MainActivity : AppCompatActivity() {
             if (resultCode == RESULT_OK) {
                 val user = firebaseAuth.currentUser
                 Toast.makeText(this, "Signed in as " + user?.displayName, Toast.LENGTH_SHORT).show()
-                userNameText.text = "Signed in as " + user?.displayName
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show()
             }

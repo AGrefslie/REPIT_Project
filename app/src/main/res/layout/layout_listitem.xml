@@ -45,7 +45,6 @@
         android:layout_alignParentBottom="false"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
-        android:onClick="startTest"
         android:textColor="@color/colorPrimary"
         android:background="#fff"
         android:padding="10dp"
