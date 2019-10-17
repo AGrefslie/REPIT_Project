@@ -1,6 +1,7 @@
 package com.example.repit_project
 
 
+import android.app.Activity
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.Intent.ACTION_PICK
@@ -15,11 +16,12 @@ import androidx.annotation.RequiresApi
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_user.*
+import java.io.IOException
 
 
 class user_fragment : Fragment() {
 
-    //private val pickImage = 1
+    private val SELECT_PICTURE = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,26 +32,32 @@ class user_fragment : Fragment() {
         return inflater.inflate(R.layout.fragment_user, container, false)
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setProfileDetails()
-
-        /*userBackImage.setOnClickListener {
-
-            val galleryIntent = Intent(ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            //val pendingIntent = PendingIntent.getBroadcast(context, 0, galleryIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-            startActivityForResult(Intent.createChooser(galleryIntent, "Sellect image", pickImage))
-
-        }*/
+        userBackImage.setOnClickListener {
+            addBackImage()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SELECT_PICTURE && resultCode == Activity.RESULT_OK) {
+            try {
+                val uri = data!!.data
+                userBackImage.setImageURI(uri)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
 
-
+    fun addBackImage() {
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), SELECT_PICTURE)
     }
 
     fun setProfileDetails() {
