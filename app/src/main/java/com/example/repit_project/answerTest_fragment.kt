@@ -21,8 +21,7 @@ class answerTest_fragment : Fragment() {
 
         val position = answerTest_fragmentArgs.fromBundle(arguments!!).quizPosition
 
-        //questionText.setText("This is Quiz " + position)
-        questionText.setText()
+        questionText.setText("This is Quiz " + position)
 
     }
 }
