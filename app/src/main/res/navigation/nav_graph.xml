@@ -10,8 +10,8 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_destination_home_to_answerTest"
-            app:destination="@id/answerTest_fragment2" />
+            android:id="@+id/action_destination_home_to_answerTest_fragment"
+            app:destination="@id/answerTest_fragment"/>
     </fragment>
     <fragment
         android:id="@+id/destination_user"
@@ -29,7 +29,11 @@
         android:label="fragment_collections"
         tools:layout="@layout/fragment_collections" />
     <fragment
-        android:id="@+id/answerTest_fragment2"
+        android:id="@+id/answerTest_fragment"
         android:name="com.example.repit_project.answerTest_fragment"
-        android:label="answerTest_fragment" />
+        android:label="answerTest_fragment" >
+        <argument
+            android:name="QuizPosition"
+            app:argType="integer" />
+    </fragment>
 </navigation>

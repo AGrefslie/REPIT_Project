@@ -6,15 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.repit_project.Models.Question
 import com.example.repit_project.Models.Quiz
 import com.example.repit_project.RecyclerViewAdapter.QuizAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.layout_listitem.*
 import kotlinx.android.synthetic.main.layout_listitem.view.*
 
 class home_fragment : Fragment() {
+
 
     private val QuestionList = listOf(
         Question("ok", "nei"),
@@ -23,7 +28,7 @@ class home_fragment : Fragment() {
         Question("ok", "nei")
     )
 
-    private val QuizList = listOf(
+    val QuizList = listOf(
         Quiz("Test Quiz", "This is just a test", "https://images.unsplash.com/photo-1524646432175-d58115a8a854?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80", false, QuestionList),
         Quiz("Test Quiz", "This is just a test", "https://images.unsplash.com/photo-1524646432175-d58115a8a854?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80", false, QuestionList)
         //Quiz("Test Quiz", "This is just a test", "https://images.unsplash.com/photo-1524646432175-d58115a8a854?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80", false, QuestionList),
@@ -43,13 +48,7 @@ class home_fragment : Fragment() {
 
         recycler_view.apply {
             layoutManager = LinearLayoutManager(activity)
-            adapter = QuizAdapter(QuizList, View.OnClickListener {
-
-                val position = recycler_view.getChildAdapterPosition(view.quiz_image)
-                val quiz = QuizList[position]
-
-                Toast.makeText(context, "Quiz Clicked " + quiz.title, Toast.LENGTH_SHORT).show()
-            })
+            adapter = QuizAdapter(QuizList)
         }
     }
 
