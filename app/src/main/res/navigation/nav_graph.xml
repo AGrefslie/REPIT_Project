@@ -35,5 +35,17 @@
         <argument
             android:name="QuizPosition"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_answerTest_fragment_to_quizFeedback"
+            app:destination="@id/quizFeedback" />
+    </fragment>
+    <fragment
+        android:id="@+id/quizFeedback"
+        android:name="com.example.repit_project.QuizFeedback"
+        android:label="QuizFeedback" >
+        <argument
+            android:name="correctAnswers"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
 </navigation>

@@ -37,10 +37,10 @@ class QuizAdapter(private val list: List<Quiz>) : RecyclerView.Adapter<RecyclerV
                 holder.bind(currentQuizItem)
 
                 holder.startTestButton.setOnClickListener{ view ->
-                    Toast.makeText(view.context, "Test " + position.toString(), Toast.LENGTH_SHORT).show()
 
                     val action = home_fragmentDirections.actionDestinationHomeToAnswerTestFragment(position)
                     findNavController(view).navigate(action)
+
                 }
             }
         }
