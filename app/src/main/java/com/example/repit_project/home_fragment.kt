@@ -29,6 +29,12 @@ class home_fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //Setup FAB navigation
+        FAB_CreateTestButton.setOnClickListener {
+            val action = home_fragmentDirections.actionDestinationHomeToDestinationCreateTest()
+            findNavController().navigate(action)
+        }
+
         recycler_view.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = QuizAdapter(QuizList)

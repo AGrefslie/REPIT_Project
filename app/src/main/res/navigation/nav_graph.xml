@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_destination_home_to_answerTest_fragment"
             app:destination="@id/answerTest_fragment"/>
+        <action
+            android:id="@+id/action_destination_home_to_destination_createTest"
+            app:destination="@id/destination_createTest" />
     </fragment>
     <fragment
         android:id="@+id/destination_user"
@@ -22,7 +25,8 @@
         android:id="@+id/destination_createTest"
         android:name="com.example.repit_project.create_test_fragment"
         android:label="create_test"
-        tools:layout="@layout/create_test" />
+        tools:layout="@layout/fragment_create_test" >
+    </fragment>
     <fragment
         android:id="@+id/destination_collections"
         android:name="com.example.repit_project.collections_fragment"
