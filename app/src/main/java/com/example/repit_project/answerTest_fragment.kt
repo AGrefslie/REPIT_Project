@@ -21,11 +21,13 @@ class answerTest_fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+
         val position = answerTest_fragmentArgs.fromBundle(arguments!!).quizPosition
         val quizList = home_fragment.QuizList
         var quizStartValue = 0
 
         questionText.setText(quizList[position].questions[quizStartValue].question)
+
 
         viewAnswerBtn.setOnClickListener {
             viewAnswer(quizList[position].questions[quizStartValue].answer)
@@ -33,13 +35,6 @@ class answerTest_fragment : Fragment() {
 
 
         submitAnswer.setOnClickListener {
-            if (quizStartValue > quizList[position].questions.size) {
-
-                val goToFeedbackAction = answerTest_fragmentDirections.actionAnswerTestFragmentToQuizFeedback()
-                findNavController().navigate(goToFeedbackAction)
-
-            } else {
-
                 if (quizList[position].questions[quizStartValue].answer.toUpperCase() == userAnswer.text.toString().toUpperCase()) {
                     //Sets Answer to black, and feedback to blank
                     userAnswer.setText("")
@@ -47,16 +42,22 @@ class answerTest_fragment : Fragment() {
 
                     //Goes to next question if answer is correct
                     quizStartValue = quizStartValue + 1
-                    questionText.setText(quizList[position].questions[quizStartValue].question)
+
 
                     //Feedback on correct answer
                     Toast.makeText(context, "RIKITG!!!", Toast.LENGTH_SHORT).show()
+
+                    if(quizStartValue + 1 > quizList[position].questions.size){
+                        val action = answerTest_fragmentDirections.actionAnswerTestFragmentToQuizFeedback()
+                        findNavController().navigate(action)
+                    } else {
+                        questionText.setText(quizList[position].questions[quizStartValue].question)
+                    }
 
                 } else {
                     //Gives feedback on wrong answer
                     answerFeedbackText.setText("FEIL! Prøv igjen")
                 }
-            }
 
         }
 
