@@ -20,8 +20,6 @@ class home_fragment : Fragment() {
     private lateinit var db : FirebaseFirestore
     private lateinit var collectionQuizes : CollectionReference
 
-    var quizList = ArrayList<Quiz>()
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         db = FirebaseFirestore.getInstance()
         collectionQuizes = db.collection("Quizes")
