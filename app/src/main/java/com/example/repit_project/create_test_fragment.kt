@@ -123,9 +123,6 @@ class create_test_fragment : Fragment() {
         quizTitle = testTitle.text.toString()
         quizDesction = testDescription.text.toString()
 
-        Log.i("Title: ", quizTitle)
-        Log.i("Description: ", quizDesction)
-
 
     }
 

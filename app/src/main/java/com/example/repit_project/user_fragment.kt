@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_user.*
@@ -38,6 +39,10 @@ class user_fragment : Fragment() {
         setProfileDetails()
         userBackImage.setOnClickListener {
             addBackImage()
+        }
+
+        signOutBtn.setOnClickListener {
+            signOutUser()
         }
     }
 
@@ -70,6 +75,13 @@ class user_fragment : Fragment() {
         userName.setText(firebaseUser?.displayName)
         email.setText(firebaseUser?.email).toString()
         picasso.load(UserPhoto).into(userImage)
+    }
+
+    fun signOutUser(): Boolean {
+
+        AuthUI.getInstance().signOut(context!!)
+        return true
+
     }
 
 }
