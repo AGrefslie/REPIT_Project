@@ -1,7 +1,10 @@
 package com.example.repit_project
 
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,6 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import com.example.repit_project.Models.Question
 import com.example.repit_project.Models.Quiz
@@ -17,6 +22,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.dialog_add_question.*
 import kotlinx.android.synthetic.main.dialog_add_question.view.*
 import kotlinx.android.synthetic.main.fragment_create_test.*
+import kotlinx.android.synthetic.main.fragment_user.*
+import java.io.IOException
 
 
 class create_test_fragment : Fragment() {
@@ -26,11 +33,13 @@ class create_test_fragment : Fragment() {
 
     private lateinit var quizTitle : String
     private lateinit var quizDesction : String
-    private lateinit var quizImageUri : String
+    private lateinit var quizImageUri : Uri
 
     private lateinit var oneQuestion : String
     private lateinit var oneAnswer : String
     private lateinit var questionList : ArrayList<Question>
+
+    private val SELECT_PICTURE = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,6 +59,14 @@ class create_test_fragment : Fragment() {
 
         addQuestionBtn.setOnClickListener {
             openQuestionDialog()
+        }
+
+        addImageBtn.setOnClickListener {
+            addQuizImage()
+        }
+
+        fabCreateTest.setOnClickListener {
+            addQuizToFirestore()
         }
     }
 
@@ -78,6 +95,38 @@ class create_test_fragment : Fragment() {
         }
 
         Builder.show()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SELECT_PICTURE && resultCode == Activity.RESULT_OK) {
+            try {
+                val uri = data!!.data
+                quizImageUri = uri!!
+                coverImage.setImageURI(uri)
+                coverImage.isVisible = true
+                addTestImageText.isVisible = false
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun addQuizImage() {
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), SELECT_PICTURE)
+    }
+
+    fun addQuizToFirestore() {
+        quizTitle = testTitle.text.toString()
+        quizDesction = testDescription.text.toString()
+
+        Log.i("Title: ", quizTitle)
+        Log.i("Description: ", quizDesction)
+
+
     }
 
 }
