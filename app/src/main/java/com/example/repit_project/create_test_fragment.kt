@@ -35,8 +35,8 @@ class create_test_fragment : Fragment() {
     private lateinit var quizDesction : String
     private lateinit var quizImageUri : Uri
 
-    private lateinit var oneQuestion : String
-    private lateinit var oneAnswer : String
+    private lateinit var inputQuestion : String
+    private lateinit var inputAnswer : String
     private lateinit var questionList : ArrayList<Question>
 
     private val SELECT_PICTURE = 1
@@ -82,10 +82,10 @@ class create_test_fragment : Fragment() {
 
         Builder.setPositiveButton("Add Question"){dialog, which ->
 
-            oneQuestion = edit_question.text.toString()
-            oneAnswer = edit_answer.text.toString()
+            inputQuestion = edit_question.text.toString()
+            inputAnswer = edit_answer.text.toString()
 
-            questionList.add(Question(oneQuestion, oneAnswer))
+            questionList.add(Question(inputQuestion, inputAnswer))
 
             Toast.makeText(context, "Question Added", Toast.LENGTH_SHORT).show()
         }

@@ -1,6 +1,7 @@
 package com.example.repit_project
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.example.repit_project.Models.Quiz
 import com.example.repit_project.RecyclerViewAdapter.QuizAdapter
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
@@ -19,6 +21,8 @@ class home_fragment : Fragment() {
 
     private lateinit var db : FirebaseFirestore
     private lateinit var collectionQuizes : CollectionReference
+
+    private lateinit var fireStoreListenerRegistration: ListenerRegistration
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         db = FirebaseFirestore.getInstance()
@@ -47,6 +51,29 @@ class home_fragment : Fragment() {
     }
 
 
+    /*private fun createFireStoreReadListner() {
+        fireStoreListenerRegistration = collectionQuizes.addSnapshotListener { querySnapshot, exception ->
+            if (exception != null) {
+                Log.w(LOGTAG, "Listen failed", exception)
+                return@addSnapshotListener
+            }
+            for (documentChange in querySnapshot?.documentChanges!!) {
+                val documentSnapshot = documentChange.document
+                val Quiz = documentSnapshot.toObject(Quiz::class.java)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        createFireStoreReadListner()
+    }
+
+    override fun onPause() {
+        super.onPause()
+    }
+    */
+
     companion object {
         private val QuestionList1 = listOf(
             Question("Hva er Hei på Spansk?", "Hola"),
@@ -66,6 +93,8 @@ class home_fragment : Fragment() {
             //Quiz("Test Quiz", "This is just a test", "https://images.unsplash.com/photo-1524646432175-d58115a8a854?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80", false, QuestionList),
             //Quiz("Test Quiz", "This is just a test", "https://images.unsplash.com/photo-1524646432175-d58115a8a854?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80", false, QuestionList)
         )
+
+        private val LOGTAG = MainActivity::class.java.simpleName
     }
 
     fun genereateTestData() {
@@ -89,3 +118,4 @@ class home_fragment : Fragment() {
     }
 
 }
+
