@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.repit_project.Models.Question
 import com.example.repit_project.Models.Quiz
+import com.google.firebase.firestore.DocumentChange.Type
 import com.example.repit_project.RecyclerViewAdapter.QuizAdapter
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,10 +18,16 @@ import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
+
 class home_fragment : Fragment() {
 
     private lateinit var db : FirebaseFirestore
     private lateinit var collectionQuizes : CollectionReference
+
+    private var quizList : MutableList<Quiz> = ArrayList()
+    private var quizListUid : MutableList<String> = ArrayList()
+
+    private lateinit var quizAdapter : QuizAdapter
 
     private lateinit var fireStoreListenerRegistration: ListenerRegistration
 
@@ -44,14 +51,16 @@ class home_fragment : Fragment() {
 
         //genereateTestData()
 
+        createFireStoreReadListner()
+
         recycler_view.apply {
             layoutManager = LinearLayoutManager(activity)
-            adapter = QuizAdapter(QuizList)
+            quizAdapter = QuizAdapter(quizList)
         }
     }
 
 
-    /*private fun createFireStoreReadListner() {
+    private fun createFireStoreReadListner() {
         fireStoreListenerRegistration = collectionQuizes.addSnapshotListener { querySnapshot, exception ->
             if (exception != null) {
                 Log.w(LOGTAG, "Listen failed", exception)
@@ -60,6 +69,26 @@ class home_fragment : Fragment() {
             for (documentChange in querySnapshot?.documentChanges!!) {
                 val documentSnapshot = documentChange.document
                 val Quiz = documentSnapshot.toObject(Quiz::class.java)
+                val QuizUid = documentSnapshot.id
+
+                val pos = quizListUid.indexOf(QuizUid)
+
+                when (documentChange.type) {
+                    Type.ADDED -> {
+                        quizList.add(Quiz)
+                        quizListUid.add(QuizUid)
+                        quizAdapter.notifyItemInserted(quizList.size-1)
+                    }
+                    Type.REMOVED -> {
+                        quizList.removeAt(pos)
+                        quizListUid.removeAt(pos)
+                        quizAdapter.notifyItemRemoved(pos)
+                    }
+                    Type.MODIFIED -> {
+                        quizList[pos] = Quiz
+                        quizAdapter.notifyItemChanged(pos)
+                    }
+                }
             }
         }
     }
@@ -71,8 +100,8 @@ class home_fragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        fireStoreListenerRegistration.remove()
     }
-    */
 
     companion object {
         private val QuestionList1 = listOf(
