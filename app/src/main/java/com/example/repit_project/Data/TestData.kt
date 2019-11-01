@@ -6,7 +6,7 @@ import com.example.repit_project.Models.Quiz
 class TestData {
 
 
-
+    /*
     companion object {
 
         val list = ArrayList<Quiz>()
@@ -68,5 +68,5 @@ class TestData {
 
             return list
         }
-    }
+    }*/
 }

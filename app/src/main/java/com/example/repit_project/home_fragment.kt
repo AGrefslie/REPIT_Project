@@ -24,8 +24,8 @@ class home_fragment : Fragment() {
     private lateinit var db : FirebaseFirestore
     private lateinit var collectionQuizes : CollectionReference
 
-    private var quizList : MutableList<Quiz> = ArrayList()
-    private var quizListUid : MutableList<String> = ArrayList()
+    var quizList : MutableList<Quiz> = ArrayList()
+    var quizListUid : MutableList<String> = ArrayList()
 
     private lateinit var quizAdapter : QuizAdapter
 
@@ -50,13 +50,8 @@ class home_fragment : Fragment() {
         }
 
         //genereateTestData()
-
         createFireStoreReadListner()
-
-        recycler_view.apply {
-            layoutManager = LinearLayoutManager(activity)
-            quizAdapter = QuizAdapter(quizList)
-        }
+        setUpRecyclerView()
     }
 
 
@@ -69,14 +64,13 @@ class home_fragment : Fragment() {
             for (documentChange in querySnapshot?.documentChanges!!) {
                 val documentSnapshot = documentChange.document
                 val Quiz = documentSnapshot.toObject(Quiz::class.java)
-                val QuizUid = documentSnapshot.id
 
-                val pos = quizListUid.indexOf(QuizUid)
+                val pos = quizListUid.indexOf(documentSnapshot.id)
 
                 when (documentChange.type) {
                     Type.ADDED -> {
                         quizList.add(Quiz)
-                        quizListUid.add(QuizUid)
+                        quizListUid.add(documentSnapshot.id)
                         quizAdapter.notifyItemInserted(quizList.size-1)
                     }
                     Type.REMOVED -> {
@@ -101,6 +95,13 @@ class home_fragment : Fragment() {
     override fun onPause() {
         super.onPause()
         fireStoreListenerRegistration.remove()
+    }
+
+    private fun setUpRecyclerView() {
+        recycler_view.apply {
+            layoutManager = LinearLayoutManager(activity)
+            quizAdapter = QuizAdapter(quizList)
+        }
     }
 
     companion object {
