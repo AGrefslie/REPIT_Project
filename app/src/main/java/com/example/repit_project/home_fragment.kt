@@ -64,13 +64,14 @@ class home_fragment : Fragment() {
             for (documentChange in querySnapshot?.documentChanges!!) {
                 val documentSnapshot = documentChange.document
                 val Quiz = documentSnapshot.toObject(Quiz::class.java)
+                Quiz.uid = documentSnapshot.id
 
-                val pos = quizListUid.indexOf(documentSnapshot.id)
+                val pos = quizListUid.indexOf(Quiz.uid)
 
                 when (documentChange.type) {
                     Type.ADDED -> {
                         quizList.add(Quiz)
-                        quizListUid.add(documentSnapshot.id)
+                        quizListUid.add(Quiz.uid)
                         quizAdapter.notifyItemInserted(quizList.size-1)
                     }
                     Type.REMOVED -> {
@@ -116,13 +117,13 @@ class home_fragment : Fragment() {
             Question("Hvem er manager for Manchester United i 2019", "Ole Gunnar Solskjær")
         )
 
-        val QuizList = listOf(
-            Quiz("Hello Quiz", "Hello in different languages", "https://i.ytimg.com/vi/kJ2dr9jAThY/maxresdefault.jpg", false, QuestionList1),
-            Quiz("MUFC & GOLF", "No description needed", "https://www.soccerpro.com/wp-content/uploads/2018/02/ManchesterUnited_1280x800.jpg", false, QuestionList2)
+        /*val QuizList = listOf(
+            //Quiz("Hello Quiz", "Hello in different languages", "https://i.ytimg.com/vi/kJ2dr9jAThY/maxresdefault.jpg", false, QuestionList1),
+            //Quiz("MUFC & GOLF", "No description needed", "https://www.soccerpro.com/wp-content/uploads/2018/02/ManchesterUnited_1280x800.jpg", false, QuestionList2)
             //Quiz("Test Quiz", "This is just a test", "https://images.unsplash.com/photo-1524646432175-d58115a8a854?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80", false, QuestionList),
             //Quiz("Test Quiz", "This is just a test", "https://images.unsplash.com/photo-1524646432175-d58115a8a854?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80", false, QuestionList),
             //Quiz("Test Quiz", "This is just a test", "https://images.unsplash.com/photo-1524646432175-d58115a8a854?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80", false, QuestionList)
-        )
+        )*/
 
         private val LOGTAG = MainActivity::class.java.simpleName
     }
@@ -142,9 +143,9 @@ class home_fragment : Fragment() {
         quizList.add(Quiz("MUFC & GOLF", "No description needed", "https://www.soccerpro.com/wp-content/uploads/2018/02/ManchesterUnited_1280x800.jpg", false, QuestionList2))
         */
 
-        for (Quiz in QuizList) {
+        /*for (Quiz in QuizList) {
             collectionQuizes.add(Quiz)
-        }
+        }*/
     }
 
 }
