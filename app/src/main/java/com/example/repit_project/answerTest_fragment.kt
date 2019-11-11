@@ -1,6 +1,8 @@
 package com.example.repit_project
 
+import android.nfc.Tag
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_answer_test.*
 import androidx.navigation.fragment.findNavController
+import com.example.repit_project.Models.Question
 
 
 class answerTest_fragment : Fragment() {
@@ -20,10 +23,8 @@ class answerTest_fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         val position = answerTest_fragmentArgs.fromBundle(arguments!!).quizPosition
-        val quizList = home_fragment.QuizList
+        val quizList = home_fragment.quizList
         var quizStartValue = 0
 
         questionText.setText(quizList[position].questions[quizStartValue].question)
@@ -35,38 +36,62 @@ class answerTest_fragment : Fragment() {
 
 
         submitAnswer.setOnClickListener {
-                if (quizList[position].questions[quizStartValue].answer.toUpperCase() == userAnswer.text.toString().toUpperCase()) {
-                    //Sets Answer to black, and feedback to blank
-                    userAnswer.setText("")
-                    answerFeedbackText.setText("")
 
-                    //Goes to next question if answer is correct
-                    quizStartValue = quizStartValue + 1
+            if (quizList[position].questions[quizStartValue].answer.toUpperCase() == userAnswer.text.toString().toUpperCase()) {
 
+                userAnswer.setText("")
+                answerFeedbackText.setText("")
 
-                    //Feedback on correct answer
-                    Toast.makeText(context, "RIKITG!!!", Toast.LENGTH_SHORT).show()
+                correctAnswerList.add(quizList[position].questions[quizStartValue].question)
 
-                    if(quizStartValue + 1 > quizList[position].questions.size){
-                        val action = answerTest_fragmentDirections.actionAnswerTestFragmentToQuizFeedback()
-                        findNavController().navigate(action)
-                    } else {
-                        questionText.setText(quizList[position].questions[quizStartValue].question)
-                    }
+                quizStartValue += 1
+
+                if(quizStartValue + 1 > quizList[position].questions.size){
+                    //Log.w("Correct List: ", correctAnswerList.toString())
+
+                    val action = answerTest_fragmentDirections.actionAnswerTestFragmentToQuizFeedback()
+                    findNavController().navigate(action)
 
                 } else {
-                    //Gives feedback on wrong answer
-                    answerFeedbackText.setText("FEIL! Prøv igjen")
+                    questionText.setText(quizList[position].questions[quizStartValue].question)
                 }
 
+            } else {
+
+                userAnswer.setText("")
+                answerFeedbackText.setText("")
+
+                wrongAnswerList.add(quizList[position].questions[quizStartValue])
+                quizStartValue += 1
+
+
+                if(quizStartValue + 1 > quizList[position].questions.size){
+                    val action = answerTest_fragmentDirections.actionAnswerTestFragmentToQuizFeedback()
+                    findNavController().navigate(action)
+
+                    //Log.w("Wrong List: ", wrongAnswerList.toString())
+                } else {
+                    questionText.setText(quizList[position].questions[quizStartValue].question)
+                }
+            }
+
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
 
+        correctAnswerList = ArrayList()
+        wrongAnswerList = ArrayList()
+    }
+
+    companion object {
+        var correctAnswerList = ArrayList<String>()
+        var wrongAnswerList = ArrayList<Question>()
     }
 
     fun viewAnswer(answer : String) {
         answerFeedbackText.setText(answer)
-        //Toast.makeText(context, answer, Toast.LENGTH_LONG).show()
     }
 
 }

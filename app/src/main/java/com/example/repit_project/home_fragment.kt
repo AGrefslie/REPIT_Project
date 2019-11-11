@@ -24,11 +24,6 @@ class home_fragment : Fragment() {
     private lateinit var db : FirebaseFirestore
     private lateinit var collectionQuizes : CollectionReference
 
-    var quizList : MutableList<Quiz> = ArrayList()
-    var quizListUid : MutableList<String> = ArrayList()
-
-    private lateinit var quizAdapter : QuizAdapter
-
     private lateinit var fireStoreListenerRegistration: ListenerRegistration
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -49,11 +44,13 @@ class home_fragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        //genereateTestData()
-        createFireStoreReadListner()
-        setUpRecyclerView()
-    }
+        recycler_view.adapter = QuizAdapter(quizList)
+        recycler_view.layoutManager = LinearLayoutManager(activity)
 
+
+        //genereateTestData()
+
+    }
 
     private fun createFireStoreReadListner() {
         fireStoreListenerRegistration = collectionQuizes.addSnapshotListener { querySnapshot, exception ->
@@ -72,16 +69,16 @@ class home_fragment : Fragment() {
                     Type.ADDED -> {
                         quizList.add(Quiz)
                         quizListUid.add(Quiz.uid)
-                        quizAdapter.notifyItemInserted(quizList.size-1)
+                        recycler_view.adapter?.notifyItemInserted(quizList.size-1)
                     }
                     Type.REMOVED -> {
                         quizList.removeAt(pos)
                         quizListUid.removeAt(pos)
-                        quizAdapter.notifyItemRemoved(pos)
+                        recycler_view.adapter?.notifyItemRemoved(pos)
                     }
                     Type.MODIFIED -> {
                         quizList[pos] = Quiz
-                        quizAdapter.notifyItemChanged(pos)
+                        recycler_view.adapter?.notifyItemChanged(pos)
                     }
                 }
             }
@@ -95,17 +92,16 @@ class home_fragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        quizList = ArrayList<Quiz>()
+        quizListUid = ArrayList<String>()
         fireStoreListenerRegistration.remove()
     }
 
-    private fun setUpRecyclerView() {
-        recycler_view.apply {
-            layoutManager = LinearLayoutManager(activity)
-            quizAdapter = QuizAdapter(quizList)
-        }
-    }
-
     companion object {
+
+        var quizList : MutableList<Quiz> = ArrayList()
+        var quizListUid : MutableList<String> = ArrayList()
+
         private val QuestionList1 = listOf(
             Question("Hva er Hei på Spansk?", "Hola"),
             Question("Hva er Hei på Engelsk?", "Hello")
@@ -117,35 +113,21 @@ class home_fragment : Fragment() {
             Question("Hvem er manager for Manchester United i 2019", "Ole Gunnar Solskjær")
         )
 
-        /*val QuizList = listOf(
-            //Quiz("Hello Quiz", "Hello in different languages", "https://i.ytimg.com/vi/kJ2dr9jAThY/maxresdefault.jpg", false, QuestionList1),
-            //Quiz("MUFC & GOLF", "No description needed", "https://www.soccerpro.com/wp-content/uploads/2018/02/ManchesterUnited_1280x800.jpg", false, QuestionList2)
+        val QuizListTestData = listOf(
+            Quiz("0","Hello Quiz", "Hello in different languages", "https://i.ytimg.com/vi/kJ2dr9jAThY/maxresdefault.jpg", false, QuestionList1),
+            Quiz("1","MUFC & GOLF", "No description needed", "https://www.soccerpro.com/wp-content/uploads/2018/02/ManchesterUnited_1280x800.jpg", false, QuestionList2)
             //Quiz("Test Quiz", "This is just a test", "https://images.unsplash.com/photo-1524646432175-d58115a8a854?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80", false, QuestionList),
             //Quiz("Test Quiz", "This is just a test", "https://images.unsplash.com/photo-1524646432175-d58115a8a854?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80", false, QuestionList),
             //Quiz("Test Quiz", "This is just a test", "https://images.unsplash.com/photo-1524646432175-d58115a8a854?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80", false, QuestionList)
-        )*/
+        )
 
         private val LOGTAG = MainActivity::class.java.simpleName
     }
 
     fun genereateTestData() {
-        /*var QuestionList1 = ArrayList<Question>()
-        var QuestionList2 = ArrayList<Question>()
-
-        QuestionList1.add(Question("Hvem er kaptein for Manchester United?", "Ashley Young"))
-        QuestionList1.add(Question("Hvem er norges største tallent i golf i dag?", "Viktor Hovland"))
-        QuestionList1.add(Question("Hvem er manager for Manchester United i 2019", "Ole Gunnar Solskjær"))
-
-        QuestionList2.add(Question("Hva er Hei på Spansk?", "Hola"))
-        QuestionList2.add(Question("Hva er Hei på Engelsk?", "Hello"))
-
-        quizList.add(Quiz("Hello Quiz", "Hello in different languages", "https://i.ytimg.com/vi/kJ2dr9jAThY/maxresdefault.jpg", false, QuestionList1))
-        quizList.add(Quiz("MUFC & GOLF", "No description needed", "https://www.soccerpro.com/wp-content/uploads/2018/02/ManchesterUnited_1280x800.jpg", false, QuestionList2))
-        */
-
-        /*for (Quiz in QuizList) {
+        for (Quiz in QuizListTestData) {
             collectionQuizes.add(Quiz)
-        }*/
+        }
     }
 
 }

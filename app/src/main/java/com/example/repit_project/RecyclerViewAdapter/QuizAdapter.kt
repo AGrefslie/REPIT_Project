@@ -1,6 +1,7 @@
 package com.example.repit_project.RecyclerViewAdapter
 
 import android.app.Activity
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +17,8 @@ import com.example.repit_project.home_fragment
 import com.example.repit_project.home_fragmentDirections
 import kotlinx.android.synthetic.main.layout_listitem.view.*
 
-class QuizAdapter(private val list: List<Quiz>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var items : List<Quiz> = list
+class QuizAdapter(private val list: MutableList<Quiz>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var items : MutableList<Quiz> = list
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -50,7 +51,7 @@ class QuizAdapter(private val list: List<Quiz>) : RecyclerView.Adapter<RecyclerV
         return items.size
     }
 
-    fun submitList(QuizList : List<Quiz>) {
+    fun submitList(QuizList : MutableList<Quiz>) {
         items = QuizList
     }
 

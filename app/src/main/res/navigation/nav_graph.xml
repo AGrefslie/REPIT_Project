@@ -26,6 +26,9 @@
         android:name="com.example.repit_project.create_test_fragment"
         android:label="create_test"
         tools:layout="@layout/fragment_create_test" >
+        <action
+            android:id="@+id/action_destination_createTest_to_destination_home"
+            app:destination="@id/destination_home" />
     </fragment>
     <fragment
         android:id="@+id/destination_collections"
@@ -51,5 +54,8 @@
             android:name="correctAnswers"
             app:argType="integer"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/action_quizFeedback_to_destination_home"
+            app:destination="@id/destination_home" />
     </fragment>
 </navigation>
