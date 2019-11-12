@@ -1,27 +1,38 @@
 package com.example.repit_project.RecyclerViewAdapter
 
-import android.app.Activity
-import android.content.Context
+
+import android.content.ContentValues.TAG
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.repit_project.Models.Quiz
 import com.example.repit_project.R
-import com.example.repit_project.answerTest_fragment
-import com.example.repit_project.home_fragment
 import com.example.repit_project.home_fragmentDirections
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.layout_listitem.view.*
 
 class QuizAdapter(private val list: MutableList<Quiz>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private var removedPosition: Int = 0
+    private var removedItem: Quiz = Quiz()
+
     private var items : MutableList<Quiz> = list
+
+    private lateinit var db : FirebaseFirestore
+    private lateinit var collectionQuizes : CollectionReference
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        db = FirebaseFirestore.getInstance()
+        collectionQuizes = db.collection("Quizes")
+
         return QuizViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.layout_listitem, parent, false)
         )
@@ -45,6 +56,29 @@ class QuizAdapter(private val list: MutableList<Quiz>) : RecyclerView.Adapter<Re
                 }
             }
         }
+    }
+
+    fun removeItem(viewHolder: RecyclerView.ViewHolder){
+
+        removedPosition = viewHolder.adapterPosition
+        removedItem = list[viewHolder.adapterPosition]
+
+        Snackbar.make(viewHolder.itemView, "Test deleted. Press UNDO if you regret your decision.", Snackbar.LENGTH_LONG).setAction("UNDO") {
+
+            collectionQuizes.add(removedItem)
+                .addOnSuccessListener { documentReference ->
+                    Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error adding document", e)
+                }
+        }.show()
+
+        /* Add logic for firestoe delete */
+        collectionQuizes.document(removedItem.uid)
+            .delete()
+            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
+            .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
     }
 
     override fun getItemCount(): Int {
