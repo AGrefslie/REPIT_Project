@@ -16,13 +16,12 @@ class QuizFeedback : Fragment() {
 
     private var mCorrectAnswers = answerTest_fragment.correctAnswerList
     private var mWrongAnswers = answerTest_fragment.wrongAnswerList
+    private var resultCorrectAnswer = answerTest_fragment.resultFromQuiz
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        Log.w("list: ", mWrongAnswers.toString())
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_feedback, container, false)
@@ -30,6 +29,10 @@ class QuizFeedback : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val totalQuestions = mCorrectAnswers.size + mWrongAnswers.size
+
+        result.setText("RESULT: " + resultCorrectAnswer.toString() + "/" + totalQuestions.toString())
 
         correctAnswer_recycler_view.adapter = CorrectAnswerAdapter(mCorrectAnswers)
         correctAnswer_recycler_view.layoutManager = LinearLayoutManager(activity)

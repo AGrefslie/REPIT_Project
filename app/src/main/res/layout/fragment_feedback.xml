@@ -8,22 +8,49 @@
 
     <TextView
         android:id="@+id/header1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:textColor="@android:color/white"
+        android:text="Feedback"
+        android:padding="10sp"
+        android:textSize="36sp" />
+
+    <TextView
+        android:id="@+id/result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Feedback"
-        android:textSize="36sp" />
+        android:textColor="@android:color/white"
+        android:layout_alignParentEnd="true"
+        android:text="RESULT"
+        android:padding="10sp"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/instructions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:textColor="@android:color/white"
+        android:text="Here you can see the results from the test"
+        android:layout_below="@id/header1"
+        android:paddingBottom="10sp"
+        android:paddingLeft="10sp"
+        android:layout_marginBottom="20sp"
+        android:textSize="12sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/correctAnswer_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/header1"/>
+        android:layout_below="@+id/instructions"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/wrongAnswer_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/correctAnswer_recycler_view"/>
+        android:layout_below="@+id/correctAnswer_recycler_view"
+        />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabEndTest"

@@ -45,6 +45,7 @@ class answerTest_fragment : Fragment() {
                 correctAnswerList.add(quizList[position].questions[quizStartValue].question)
 
                 quizStartValue += 1
+                resultFromQuiz += 1
 
                 if(quizStartValue + 1 > quizList[position].questions.size){
                     //Log.w("Correct List: ", correctAnswerList.toString())
@@ -88,6 +89,8 @@ class answerTest_fragment : Fragment() {
     companion object {
         var correctAnswerList = ArrayList<String>()
         var wrongAnswerList = ArrayList<Question>()
+
+        var resultFromQuiz = 0
     }
 
     fun viewAnswer(answer : String) {
