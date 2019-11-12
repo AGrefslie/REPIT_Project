@@ -75,8 +75,11 @@ class create_test_fragment : Fragment() {
             addQuizToFirestore()
         }
 
-        if (publicSwitch.isActivated) {
-
+        publicSwitch.setOnCheckedChangeListener { button, isChecked ->
+            if (isChecked) {
+                quizPrivacey = true
+                Log.w("privacy", quizPrivacey.toString())
+            }
         }
     }
 

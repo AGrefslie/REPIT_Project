@@ -84,6 +84,7 @@ class answerTest_fragment : Fragment() {
 
         correctAnswerList = ArrayList()
         wrongAnswerList = ArrayList()
+        resultFromQuiz = 0
     }
 
     companion object {

@@ -40,11 +40,6 @@ class QuizFeedback : Fragment() {
         wrongAnswer_recycler_view.adapter = WrongAnswerAdapter(mWrongAnswers)
         wrongAnswer_recycler_view.layoutManager = LinearLayoutManager(activity)
 
-        fabEndTest.setOnClickListener {
-            val action = QuizFeedbackDirections.actionQuizFeedbackToDestinationHome()
-            findNavController().navigate(action)
-        }
-
     }
 
 }

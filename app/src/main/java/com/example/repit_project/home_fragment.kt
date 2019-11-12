@@ -39,6 +39,7 @@ class home_fragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         db = FirebaseFirestore.getInstance()
         collectionQuizes = db.collection("Quizes")
+        val privacyQuery = collectionQuizes.whereEqualTo("public", false)
 
         deleteIcon = ContextCompat.getDrawable(this.requireContext(), R.drawable.ic_delete)!!
 
@@ -59,6 +60,7 @@ class home_fragment : Fragment() {
         recycler_view.adapter = QuizAdapter(quizList)
         recycler_view.layoutManager = LinearLayoutManager(activity)
 
+        /*DELETE FUNCTION WITH SWIPE FUNCTIONALITY AND DRAWER. (removeItem function is located in QuizAdapter)*/
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
                 return false
@@ -106,6 +108,7 @@ class home_fragment : Fragment() {
 
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(recycler_view)
+        /*DELETE FUNCTION END*/
     }
 
     private fun createFireStoreReadListner() {
@@ -154,37 +157,12 @@ class home_fragment : Fragment() {
     }
 
     companion object {
-
         var quizList : MutableList<Quiz> = ArrayList()
         var quizListUid : MutableList<String> = ArrayList()
-
-        private val QuestionList1 = listOf(
-            Question("Hva er Hei på Spansk?", "Hola"),
-            Question("Hva er Hei på Engelsk?", "Hello")
-        )
-
-        private val QuestionList2 = listOf(
-            Question("Hvem er kaptein for Manchester United?", "Ashley Young"),
-            Question("Hvem er norges største tallent i golf i dag?", "Viktor Hovland"),
-            Question("Hvem er manager for Manchester United i 2019", "Ole Gunnar Solskjær")
-        )
-
-        val QuizListTestData = listOf(
-            Quiz("0","Hello Quiz", "Hello in different languages", "https://i.ytimg.com/vi/kJ2dr9jAThY/maxresdefault.jpg", false, QuestionList1),
-            Quiz("1","MUFC & GOLF", "No description needed", "https://www.soccerpro.com/wp-content/uploads/2018/02/ManchesterUnited_1280x800.jpg", false, QuestionList2)
-            //Quiz("Test Quiz", "This is just a test", "https://images.unsplash.com/photo-1524646432175-d58115a8a854?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80", false, QuestionList),
-            //Quiz("Test Quiz", "This is just a test", "https://images.unsplash.com/photo-1524646432175-d58115a8a854?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80", false, QuestionList),
-            //Quiz("Test Quiz", "This is just a test", "https://images.unsplash.com/photo-1524646432175-d58115a8a854?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80", false, QuestionList)
-        )
 
         private val LOGTAG = MainActivity::class.java.simpleName
     }
 
-    fun genereateTestData() {
-        for (Quiz in QuizListTestData) {
-            collectionQuizes.add(Quiz)
-        }
-    }
 
 }
 

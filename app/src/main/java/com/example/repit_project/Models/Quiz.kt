@@ -8,6 +8,6 @@ data class Quiz(@get:Exclude var uid : String = "0",
                 var description : String = "",
                 var image : String = "",
                 var public : Boolean = false,
-                val questions : List<Question> = emptyList()/*,
-                val user : FirebaseUser*/)
+                val questions : List<Question> = emptyList(),
+                val user : FirebaseUser)
 
