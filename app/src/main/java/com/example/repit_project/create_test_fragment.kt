@@ -5,6 +5,10 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -14,14 +18,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.repit_project.Models.Question
 import com.example.repit_project.Models.Quiz
+import com.example.repit_project.RecyclerViewAdapter.QuestionListAdapter
+import com.example.repit_project.RecyclerViewAdapter.QuizAdapter
+import com.example.repit_project.RecyclerViewAdapter.WrongAnswerAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.dialog_view_questions.*
 import kotlinx.android.synthetic.main.fragment_create_test.*
+import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.layout_listitem.*
 import java.io.IOException
 
 
@@ -34,11 +49,15 @@ class create_test_fragment : Fragment() {
     private lateinit var quizTitle : String
     private lateinit var quizDescription : String
     private lateinit var quizImageUri : Uri
+
     var quizPrivacey = false
 
     private lateinit var inputQuestion : String
     private lateinit var inputAnswer : String
     private lateinit var questionList : ArrayList<Question>
+
+    private var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
+    private lateinit var deleteIcon: Drawable
 
     private val SELECT_PICTURE = 1
 
@@ -49,6 +68,8 @@ class create_test_fragment : Fragment() {
 
         db = FirebaseFirestore.getInstance()
         collectionQuizes = db.collection("Quizes")
+
+        deleteIcon = ContextCompat.getDrawable(this.requireContext(), R.drawable.ic_delete_small)!!
 
         questionList = ArrayList()
 
@@ -64,6 +85,11 @@ class create_test_fragment : Fragment() {
             openQuestionDialog()
         }
 
+        viewQuestionsBtn.setOnClickListener {
+            openQuestionList()
+        }
+
+        quizImageUri = (R.drawable.ic_launcher_foreground.toString().toUri())
         addImageBtn.setOnClickListener {
             addQuizImage()
         }
@@ -87,6 +113,7 @@ class create_test_fragment : Fragment() {
             .setTitle("Add Question")
             .setMessage("Fill in the fields below to add a question")
 
+
         val editQuestion = DialogView.findViewById<EditText>(R.id.edit_question)
         val editAnswer = DialogView.findViewById<EditText>(R.id.edit_answer)
 
@@ -105,6 +132,81 @@ class create_test_fragment : Fragment() {
         }
 
         Builder.show()
+    }
+
+
+
+    private fun openQuestionList() {
+
+        val DialogView = LayoutInflater.from(context).inflate(R.layout.dialog_view_questions, null)
+
+
+        val Builder = AlertDialog.Builder(context)
+            .setView(DialogView)
+            .setTitle("Here is list of all your questions")
+            .setMessage("Swipe left to delete a question")
+
+        val mYrecylerView = DialogView.findViewById<RecyclerView>(R.id.recycler_view_questions)
+
+        mYrecylerView.adapter = QuestionListAdapter(questionList)
+        mYrecylerView.layoutManager = LinearLayoutManager(activity)
+
+        Builder.setPositiveButton("SAVE"){_, _ ->
+            Toast.makeText(context, "Question list saved", Toast.LENGTH_SHORT).show()
+        }
+        Builder.setNegativeButton("CANCEL") {_, _ ->
+            Toast.makeText(context,"Adding Question Canceled", Toast.LENGTH_SHORT).show()
+        }
+
+        Builder.show()
+
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
+                (mYrecylerView.adapter as QuestionListAdapter).removeItem(viewHolder)
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+
+                val itemView = viewHolder.itemView
+                val iconMargin = (itemView.height - deleteIcon.intrinsicHeight) / 2
+
+                if (dX < 0) {
+                    swipeBackground.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                    deleteIcon.setBounds(itemView.right - iconMargin - deleteIcon.intrinsicWidth, itemView.top + iconMargin,
+                        itemView.right - iconMargin, itemView.bottom - iconMargin)
+                }
+
+                swipeBackground.draw(c)
+
+                c.save()
+
+                if (dX < 0 ) {
+                    c.clipRect(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                }
+
+                deleteIcon.draw(c)
+
+                c.restore()
+            }
+
+
+        }
+
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(mYrecylerView)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -136,7 +238,6 @@ class create_test_fragment : Fragment() {
         val firebaseUser = FirebaseAuth.getInstance().currentUser
 
         val mQuiz = Quiz("0", quizTitle, quizDescription, quizImageUri.toString(), quizPrivacey, questionList, firebaseUser!!.uid)
-
 
         collectionQuizes.add(mQuiz)
             .addOnSuccessListener { documentReference ->

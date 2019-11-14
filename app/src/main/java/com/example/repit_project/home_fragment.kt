@@ -37,7 +37,6 @@ class home_fragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         db = FirebaseFirestore.getInstance()
         collectionQuizes = db.collection("Quizes")
-        val privacyQuery = collectionQuizes.whereEqualTo("public", false)
 
         deleteIcon = ContextCompat.getDrawable(this.requireContext(), R.drawable.ic_delete)!!
 
@@ -113,7 +112,6 @@ class home_fragment : Fragment() {
         val firebaseUser = FirebaseAuth.getInstance().currentUser
 
         fireStoreListenerRegistration = collectionQuizes
-            .whereEqualTo("public", false)
             .whereEqualTo("userId", firebaseUser?.uid)
             .addSnapshotListener { querySnapshot, exception ->
             if (exception != null) {
@@ -163,7 +161,7 @@ class home_fragment : Fragment() {
         var quizList : MutableList<Quiz> = ArrayList()
         var quizListUid : MutableList<String> = ArrayList()
 
-        private val LOGTAG = MainActivity::class.java.simpleName
+        val LOGTAG = MainActivity::class.java.simpleName
     }
 
 
