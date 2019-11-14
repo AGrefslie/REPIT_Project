@@ -15,16 +15,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.repit_project.Models.Question
 import com.example.repit_project.Models.Quiz
 import com.google.firebase.firestore.DocumentChange.Type
 import com.example.repit_project.RecyclerViewAdapter.QuizAdapter
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.layout_listitem.*
-
 
 class home_fragment : Fragment() {
 
@@ -112,7 +110,12 @@ class home_fragment : Fragment() {
     }
 
     private fun createFireStoreReadListner() {
-        fireStoreListenerRegistration = collectionQuizes.addSnapshotListener { querySnapshot, exception ->
+        val firebaseUser = FirebaseAuth.getInstance().currentUser
+
+        fireStoreListenerRegistration = collectionQuizes
+            .whereEqualTo("public", false)
+            .whereEqualTo("userId", firebaseUser?.uid)
+            .addSnapshotListener { querySnapshot, exception ->
             if (exception != null) {
                 Log.w(LOGTAG, "Listen failed", exception)
                 return@addSnapshotListener
