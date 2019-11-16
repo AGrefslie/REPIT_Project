@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:padding="20sp">
+
+    <TimePicker
+        android:layout_width="300dp"
+        android:layout_height="342dp"/>
+
+    <EditText
+        android:id="@+id/reminderText"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter message"
+        android:textSize="24sp"
+        android:padding="20sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cancelReminderBtn"
+            android:layout_margin="20sp"
+            android:text="CANCEL"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/setReminderBtn"
+            android:layout_margin="20sp"
+            android:text="SET"/>
+
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

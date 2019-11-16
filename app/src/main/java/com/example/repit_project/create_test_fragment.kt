@@ -2,8 +2,12 @@ package com.example.repit_project
 
 
 import android.app.Activity
+import android.app.AlarmManager
 import android.app.AlertDialog
+import android.app.PendingIntent
 import android.content.ContentValues.TAG
+import android.content.Context
+import android.content.Context.ALARM_SERVICE
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
@@ -19,6 +23,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
@@ -33,6 +38,7 @@ import com.example.repit_project.RecyclerViewAdapter.WrongAnswerAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.dialog_date_picker.*
 import kotlinx.android.synthetic.main.dialog_view_questions.*
 import kotlinx.android.synthetic.main.fragment_create_test.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -80,6 +86,10 @@ class create_test_fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        reminderBtn.setOnClickListener {
+            openReminderDialog()
+        }
 
         addQuestionBtn.setOnClickListener {
             openQuestionDialog()
@@ -134,6 +144,34 @@ class create_test_fragment : Fragment() {
         Builder.show()
     }
 
+    private fun openReminderDialog() {
+        val notificationId = 1
+
+        val intent = Intent(context, AlarmReciver::class.java)
+        intent.putExtra("notificationId", notificationId)
+        intent.putExtra("todo", reminderText.text.toString())
+
+        val mAlarmIntent = PendingIntent.getBroadcast(context, 0, intent,
+            PendingIntent.FLAG_CANCEL_CURRENT)
+
+        val alarm : AlarmManager? = context?.getSystemService(AlarmManager::class.java) as AlarmManager
+
+        val DialogView = LayoutInflater.from(context).inflate(R.layout.dialog_date_picker, null)
+
+        val Builder = AlertDialog.Builder(context)
+            .setView(DialogView)
+            .setTitle("Pick a time")
+            .setMessage("Set the time to when you want a reminder")
+
+        Builder.setPositiveButton("SET"){_, _ ->
+            Toast.makeText(context, "Reminder set", Toast.LENGTH_SHORT).show()
+        }
+        Builder.setNegativeButton("CANCEL") {_, _ ->
+            Toast.makeText(context,"Reminder Canceld", Toast.LENGTH_SHORT).show()
+        }
+
+        Builder.show()
+    }
 
 
     private fun openQuestionList() {
