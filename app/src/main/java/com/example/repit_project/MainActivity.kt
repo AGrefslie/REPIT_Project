@@ -79,6 +79,8 @@ class MainActivity : AppCompatActivity() {
                             AuthUI.IdpConfig.GoogleBuilder().build(),
                             AuthUI.IdpConfig.EmailBuilder().build()))
                         .setIsSmartLockEnabled(false)
+                        .setTheme(R.style.LoginTheme)
+                        .setLogo(R.mipmap.ic_launcher)
                         .build(), RC_SIGN_IN
                 )
             }

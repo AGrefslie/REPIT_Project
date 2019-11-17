@@ -14,13 +14,16 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
+import android.widget.TimePicker
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
@@ -44,13 +47,14 @@ import kotlinx.android.synthetic.main.fragment_create_test.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.layout_listitem.*
 import java.io.IOException
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class create_test_fragment : Fragment() {
 
     private lateinit var db : FirebaseFirestore
     private lateinit var collectionQuizes : CollectionReference
-    private lateinit var user : FirebaseAuth
 
     private lateinit var quizTitle : String
     private lateinit var quizDescription : String
@@ -147,30 +151,62 @@ class create_test_fragment : Fragment() {
     private fun openReminderDialog() {
         val notificationId = 1
 
-        val intent = Intent(context, AlarmReciver::class.java)
-        intent.putExtra("notificationId", notificationId)
-        intent.putExtra("todo", reminderText.text.toString())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-        val mAlarmIntent = PendingIntent.getBroadcast(context, 0, intent,
-            PendingIntent.FLAG_CANCEL_CURRENT)
+            val intent = Intent(context, AlarmReciver::class.java)
+            intent.putExtra("notificationId", notificationId)
+            intent.putExtra("todo", reminderText?.text.toString())
 
-        val alarm : AlarmManager? = context?.getSystemService(AlarmManager::class.java) as AlarmManager
+            val mAlarmIntent = PendingIntent.getBroadcast(
+                context, 0, intent,
+                PendingIntent.FLAG_CANCEL_CURRENT
+            )
 
-        val DialogView = LayoutInflater.from(context).inflate(R.layout.dialog_date_picker, null)
+            val alarm: AlarmManager? = context?.getSystemService(AlarmManager::class.java) as AlarmManager
 
-        val Builder = AlertDialog.Builder(context)
-            .setView(DialogView)
-            .setTitle("Pick a time")
-            .setMessage("Set the time to when you want a reminder")
 
-        Builder.setPositiveButton("SET"){_, _ ->
-            Toast.makeText(context, "Reminder set", Toast.LENGTH_SHORT).show()
+
+            val DialogView = LayoutInflater.from(context).inflate(R.layout.dialog_date_picker, null)
+
+            val Builder = AlertDialog.Builder(context)
+                .setView(DialogView)
+                .setTitle("Pick a time")
+
+            val setBtn = DialogView.findViewById<Button>(R.id.setReminderBtn)
+            val cancelBtn = DialogView.findViewById<Button>(R.id.cancelReminderBtn)
+            val TimePicker = DialogView.findViewById<TimePicker>(R.id.timePicker)
+
+            setBtn.setOnClickListener {
+                val hour = TimePicker.hour
+                val minute = TimePicker.minute
+
+                val startTime = Calendar.getInstance()
+                startTime.set(Calendar.HOUR_OF_DAY, hour)
+                startTime.set(Calendar.MINUTE, minute)
+                startTime.set(Calendar.SECOND, 0)
+                val alarmStartTime = startTime.timeInMillis
+
+                alarm?.set(AlarmManager.RTC_WAKEUP, alarmStartTime, mAlarmIntent)
+                Toast.makeText(context, "Done!", Toast.LENGTH_SHORT).show()
+            }
+
+            cancelBtn.setOnClickListener {
+                alarm?.cancel(mAlarmIntent)
+                Toast.makeText(context, "Canceled.", Toast.LENGTH_SHORT).show()
+            }
+
+            Builder.show()
+
+        } else {
+            val Builder = AlertDialog.Builder(context)
+                .setTitle("You do not have access to this feature")
+                .setMessage("Update your api to get this feature if possible")
+
+            Builder.setNegativeButton("CLOSE") { _, _ ->
+
+            }
+            Builder.show()
         }
-        Builder.setNegativeButton("CANCEL") {_, _ ->
-            Toast.makeText(context,"Reminder Canceld", Toast.LENGTH_SHORT).show()
-        }
-
-        Builder.show()
     }
 
 
