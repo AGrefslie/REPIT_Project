@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -15,9 +16,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.repit_project.Models.Question
 import com.example.repit_project.Models.Quiz
 import com.google.firebase.firestore.DocumentChange.Type
 import com.example.repit_project.RecyclerViewAdapter.QuizAdapter
+import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -29,12 +32,16 @@ class home_fragment : Fragment() {
     private lateinit var db : FirebaseFirestore
     private lateinit var collectionQuizes : CollectionReference
 
+    private var quizList : MutableList<Quiz> = ArrayList()
+    private var quizListUid : MutableList<String> = ArrayList()
+
     private lateinit var fireStoreListenerRegistration: ListenerRegistration
 
     private var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
     private lateinit var deleteIcon: Drawable
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         db = FirebaseFirestore.getInstance()
         collectionQuizes = db.collection("Quizes")
 
@@ -54,7 +61,7 @@ class home_fragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        recycler_view.adapter = QuizAdapter(quizList)
+        recycler_view.adapter = QuizAdapter(quizList, 1)
         recycler_view.layoutManager = LinearLayoutManager(activity)
 
         /*DELETE FUNCTION WITH SWIPE FUNCTIONALITY AND DRAWER. (removeItem function is located in QuizAdapter)*/
@@ -108,6 +115,7 @@ class home_fragment : Fragment() {
         /*DELETE FUNCTION END*/
     }
 
+
     private fun createFireStoreReadListner() {
         val firebaseUser = FirebaseAuth.getInstance().currentUser
 
@@ -158,9 +166,6 @@ class home_fragment : Fragment() {
     }
 
     companion object {
-        var quizList : MutableList<Quiz> = ArrayList()
-        var quizListUid : MutableList<String> = ArrayList()
-
         val LOGTAG = MainActivity::class.java.simpleName
     }
 

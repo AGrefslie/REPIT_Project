@@ -6,24 +6,28 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.repit_project.Models.Quiz
 import com.example.repit_project.R
+import com.example.repit_project.collections_fragmentDirections
+import com.example.repit_project.home_fragment
 import com.example.repit_project.home_fragmentDirections
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.layout_listitem.view.*
 
-class QuizAdapter(private val list: MutableList<Quiz>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class QuizAdapter(private val list: MutableList<Quiz>, whichFragment : Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var removedPosition: Int = 0
     private var removedItem: Quiz = Quiz()
 
     private var items : MutableList<Quiz> = list
+    private var WhichFragment = whichFragment
 
     private lateinit var db : FirebaseFirestore
     private lateinit var collectionQuizes : CollectionReference
@@ -49,9 +53,14 @@ class QuizAdapter(private val list: MutableList<Quiz>) : RecyclerView.Adapter<Re
                 holder.bind(currentQuizItem)
 
                 holder.startTestButton.setOnClickListener{ view ->
-
-                    val action = home_fragmentDirections.actionDestinationHomeToAnswerTestFragment(position)
-                    findNavController(view).navigate(action)
+                    if (WhichFragment == 1) {
+                        val action = home_fragmentDirections.actionDestinationHomeToAnswerTestFragment(list[position])
+                        findNavController(view).navigate(action)
+                    }
+                    if (WhichFragment == 2) {
+                        val action = collections_fragmentDirections.actionDestinationCollectionsToAnswerTestFragment(list[position])
+                        findNavController(view).navigate(action)
+                    }
 
                 }
             }

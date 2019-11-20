@@ -24,6 +24,9 @@ class collections_fragment : Fragment() {
     private lateinit var collectionQuizes : CollectionReference
     private lateinit var fireStoreListenerRegistration: ListenerRegistration
 
+    private var quizList : MutableList<Quiz> = ArrayList()
+    private var quizListUid : MutableList<String> = ArrayList()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,7 +42,7 @@ class collections_fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recycler_view.adapter = QuizAdapter(quizList)
+        recycler_view.adapter = QuizAdapter(quizList, 2)
         recycler_view.layoutManager = LinearLayoutManager(activity) //GridLayoutManager(context, 2)
     }
 
@@ -89,10 +92,5 @@ class collections_fragment : Fragment() {
         quizList = ArrayList<Quiz>()
         quizListUid = ArrayList<String>()
         fireStoreListenerRegistration.remove()
-    }
-
-    companion object {
-        var quizList : MutableList<Quiz> = ArrayList()
-        var quizListUid : MutableList<String> = ArrayList()
     }
 }

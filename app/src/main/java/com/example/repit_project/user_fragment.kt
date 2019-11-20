@@ -3,18 +3,28 @@ package com.example.repit_project
 
 import android.app.Activity
 import android.app.PendingIntent
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.Intent.ACTION_PICK
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.net.toUri
+import com.example.repit_project.Models.Quiz
+import com.example.repit_project.Models.UserDetail
+import com.example.repit_project.home_fragment.Companion.LOGTAG
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_user.*
 import java.io.IOException
@@ -23,11 +33,19 @@ import java.io.IOException
 class user_fragment : Fragment() {
 
     private val SELECT_PICTURE = 1
+    private val firebaseUser = FirebaseAuth.getInstance().currentUser
+    private val userPhoto = firebaseUser?.photoUrl
+
+    private lateinit var db : FirebaseFirestore
+    private lateinit var collectionUserDetails : CollectionReference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        db = FirebaseFirestore.getInstance()
+        collectionUserDetails = db.collection("UserDetails")
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_user, container, false)
@@ -43,6 +61,20 @@ class user_fragment : Fragment() {
 
         signOutBtn.setOnClickListener {
             signOutUser()
+        }
+        saveDetailsBtn.setOnClickListener {
+            saveDetails()
+        }
+    }
+
+    fun getUserDetailsFromFirestore () {
+        val docRef = collectionUserDetails.document(firebaseUser!!.uid)
+        docRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                TODO("Trenger hjelp til å fylle lokale variabler fra FS")
+            } else {
+                Log.d(LOGTAG, "Error getting documents: " + task.exception)
+            }
         }
     }
 
@@ -66,22 +98,35 @@ class user_fragment : Fragment() {
     }
 
     fun setProfileDetails() {
-        val firebaseUser = FirebaseAuth.getInstance().currentUser
-
-        val UserPhoto = firebaseUser?.photoUrl
-
         val picasso = Picasso.get()
 
         userName.setText(firebaseUser?.displayName)
-        email.setText(firebaseUser?.email).toString()
-        picasso.load(UserPhoto).into(userImage)
+        email.setText("Email: " + (firebaseUser?.email).toString())
+        picasso.load(userPhoto).into(userImage)
+    }
+
+    private fun saveDetails() {
+        var userDetail = UserDetail(userBackImage.toString(), bio.text.toString())
+        collectionUserDetails.document(firebaseUser!!.uid).set(userDetail).addOnSuccessListener { documentReference ->
+            Log.d(TAG, "DocumentSnapshot written with ID: ${firebaseUser.uid}")
+            Toast.makeText(context, "Details Saved", Toast.LENGTH_SHORT).show()
+        }
+        .addOnFailureListener { e ->
+            Log.w(TAG, "Error adding document", e)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        //make sure that the keyboard dont push the view when activated
+        getActivity()?.getWindow()?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
     }
 
     fun signOutUser(): Boolean {
 
         AuthUI.getInstance().signOut(context!!)
         return true
-
     }
 
 }

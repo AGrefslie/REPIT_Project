@@ -1,34 +1,33 @@
 package com.example.repit_project
 
 
-import android.app.Activity
-import android.app.AlarmManager
-import android.app.AlertDialog
-import android.app.PendingIntent
+import android.app.*
 import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.Context.ALARM_SERVICE
+import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.view.WindowManager
 import android.widget.EditText
-import android.widget.TimePicker
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,17 +35,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.repit_project.Models.Question
 import com.example.repit_project.Models.Quiz
 import com.example.repit_project.RecyclerViewAdapter.QuestionListAdapter
-import com.example.repit_project.RecyclerViewAdapter.QuizAdapter
-import com.example.repit_project.RecyclerViewAdapter.WrongAnswerAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.dialog_date_picker.*
-import kotlinx.android.synthetic.main.dialog_view_questions.*
 import kotlinx.android.synthetic.main.fragment_create_test.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.layout_listitem.*
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -71,6 +65,8 @@ class create_test_fragment : Fragment() {
 
     private val SELECT_PICTURE = 1
 
+    private var CHANNEL_ID = 0
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -90,10 +86,6 @@ class create_test_fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        reminderBtn.setOnClickListener {
-            openReminderDialog()
-        }
 
         addQuestionBtn.setOnClickListener {
             openQuestionDialog()
@@ -119,7 +111,7 @@ class create_test_fragment : Fragment() {
         }
     }
 
-    fun openQuestionDialog() {
+    private fun openQuestionDialog() {
         val DialogView = LayoutInflater.from(context).inflate(R.layout.dialog_add_question, null)
 
         val Builder = AlertDialog.Builder(context)
@@ -147,68 +139,6 @@ class create_test_fragment : Fragment() {
 
         Builder.show()
     }
-
-    private fun openReminderDialog() {
-        val notificationId = 1
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            val intent = Intent(context, AlarmReciver::class.java)
-            intent.putExtra("notificationId", notificationId)
-            intent.putExtra("todo", reminderText?.text.toString())
-
-            val mAlarmIntent = PendingIntent.getBroadcast(
-                context, 0, intent,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
-
-            val alarm: AlarmManager? = context?.getSystemService(AlarmManager::class.java) as AlarmManager
-
-
-
-            val DialogView = LayoutInflater.from(context).inflate(R.layout.dialog_date_picker, null)
-
-            val Builder = AlertDialog.Builder(context)
-                .setView(DialogView)
-                .setTitle("Pick a time")
-
-            val setBtn = DialogView.findViewById<Button>(R.id.setReminderBtn)
-            val cancelBtn = DialogView.findViewById<Button>(R.id.cancelReminderBtn)
-            val TimePicker = DialogView.findViewById<TimePicker>(R.id.timePicker)
-
-            setBtn.setOnClickListener {
-                val hour = TimePicker.hour
-                val minute = TimePicker.minute
-
-                val startTime = Calendar.getInstance()
-                startTime.set(Calendar.HOUR_OF_DAY, hour)
-                startTime.set(Calendar.MINUTE, minute)
-                startTime.set(Calendar.SECOND, 0)
-                val alarmStartTime = startTime.timeInMillis
-
-                alarm?.set(AlarmManager.RTC_WAKEUP, alarmStartTime, mAlarmIntent)
-                Toast.makeText(context, "Done!", Toast.LENGTH_SHORT).show()
-            }
-
-            cancelBtn.setOnClickListener {
-                alarm?.cancel(mAlarmIntent)
-                Toast.makeText(context, "Canceled.", Toast.LENGTH_SHORT).show()
-            }
-
-            Builder.show()
-
-        } else {
-            val Builder = AlertDialog.Builder(context)
-                .setTitle("You do not have access to this feature")
-                .setMessage("Update your api to get this feature if possible")
-
-            Builder.setNegativeButton("CLOSE") { _, _ ->
-
-            }
-            Builder.show()
-        }
-    }
-
 
     private fun openQuestionList() {
 
@@ -324,6 +254,14 @@ class create_test_fragment : Fragment() {
 
         val action = create_test_fragmentDirections.actionDestinationCreateTestToDestinationHome()
         findNavController().navigate(action)
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        //make sure that the keyboard dont push the view when activated
+        getActivity()?.getWindow()?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
     }
 
 }

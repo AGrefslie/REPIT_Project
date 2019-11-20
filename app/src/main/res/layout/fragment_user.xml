@@ -17,8 +17,8 @@
         android:id="@+id/userBackImage"
         android:layout_width="match_parent"
         android:layout_height="225sp"
-        android:contentDescription="@string/user_cover_image"
         android:background="@drawable/ic_launcher_background"
+        android:contentDescription="@string/user_cover_image"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,8 +30,8 @@
         android:layout_width="150sp"
         android:layout_height="150sp"
         android:background="@color/colorPrimary"
-        android:padding="3sp"
         android:contentDescription="@string/userImage"
+        android:padding="3sp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/userName"
         app:layout_constraintEnd_toEndOf="parent"
@@ -75,12 +75,44 @@
 
     <Button
         android:id="@+id/signOutBtn"
-        android:layout_width="300sp"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="56dp"
+        android:background="@android:color/holo_red_dark"
         android:text="SIGN OUT"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/saveDetailsBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <EditText
+        android:id="@+id/bio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="39dp"
+        android:ems="10"
+        android:hint="Bio..."
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/saveDetailsBtn"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:text="SAVE DETAILS"
+        android:background="@android:color/holo_green_dark"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/signOutBtn"
         app:layout_constraintTop_toTopOf="@+id/guideline3"
         app:layout_constraintVertical_bias="0.9" />
 

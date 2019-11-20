@@ -34,17 +34,21 @@
         android:id="@+id/destination_collections"
         android:name="com.example.repit_project.collections_fragment"
         android:label="fragment_collections"
-        tools:layout="@layout/fragment_collections" />
+        tools:layout="@layout/fragment_collections" >
+        <action
+            android:id="@+id/action_destination_collections_to_answerTest_fragment"
+            app:destination="@id/answerTest_fragment" />
+    </fragment>
     <fragment
         android:id="@+id/answerTest_fragment"
         android:name="com.example.repit_project.answerTest_fragment"
         android:label="answerTest_fragment" >
-        <argument
-            android:name="QuizPosition"
-            app:argType="integer" />
         <action
             android:id="@+id/action_answerTest_fragment_to_quizFeedback"
             app:destination="@id/quizFeedback" />
+        <argument
+            android:name="QuizList"
+            app:argType="com.example.repit_project.Models.Quiz" />
     </fragment>
     <fragment
         android:id="@+id/quizFeedback"

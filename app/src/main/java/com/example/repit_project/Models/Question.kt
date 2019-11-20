@@ -1,3 +1,7 @@
 package com.example.repit_project.Models
 
-data class Question(var question : String = "", var answer : String = "")
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+data class Question(var question : String = "", var answer : String = "") : Parcelable

@@ -16,4 +16,7 @@
     <string name="username">Username</string>
     <string name="userImage">user image</string>
     <string name="user_cover_image">User cover image</string>
+    <string name="generate_test_data">Generate Test Data</string>
+    <string name="channel_name">Repit-Channel</string>
+    <string name="channel_description">Repit-Basic-NotificationChannel</string>
 </resources>
