@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.repit_project.Models.Quiz
@@ -16,7 +18,9 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.android.synthetic.main.fragment_collections.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home.recycler_view
 
 class collections_fragment : Fragment() {
 
@@ -82,9 +86,44 @@ class collections_fragment : Fragment() {
             }
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        searchField.setOnQueryTextListener(object :
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+                search(query)
+                return false
+            }
+
+        })
+    }
+
+    fun search(str : String) {
+        val searchedQuizList = ArrayList<Quiz>()
+        for (Quiz in quizList) {
+
+            if (Quiz.title.toLowerCase().contains(str.toLowerCase())){
+                searchedQuizList.add(Quiz)
+            }
+
+        }
+
+        recycler_view.adapter = QuizAdapter(searchedQuizList, 2)
+        recycler_view.layoutManager = LinearLayoutManager(activity)
+    }
+
     override fun onResume() {
         super.onResume()
         createFireStoreReadListner()
+
+        //make sure that the keyboard dont push the view when activated
+        getActivity()?.getWindow()?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
     }
 
     override fun onPause() {
