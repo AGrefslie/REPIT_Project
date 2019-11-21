@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "406608408212-s32tlqu32ra9eljf3ummfpr15ps1u199.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.repit_project",
+            "certificate_hash": "cba4fbd712febe79383bde1b70fe2651be248879"
+          }
+        },
+        {
           "client_id": "406608408212-iurt624qqm91jonm6l6skk7ce5vilb87.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

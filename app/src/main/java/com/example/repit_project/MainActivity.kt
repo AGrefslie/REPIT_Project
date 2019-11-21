@@ -47,23 +47,8 @@ class MainActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        val intent = Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        createNotificationChannel()
 
-        var builder = NotificationCompat.Builder(this, CHANNEL_ID.toString())
-            .setSmallIcon(R.drawable.ic_school)
-            .setContentTitle("REPIT")
-            .setContentText("Remember to repit")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
-
-        with(NotificationManagerCompat.from(this)) {
-            // notificationId is a unique int for each notification that you must define
-            notify(notificationId, builder.build())
-        }
     }
 
     private fun createNotificationChannel() {
@@ -78,12 +63,13 @@ class MainActivity : AppCompatActivity() {
             // Register the channel with the system
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+                notificationManager.createNotificationChannel(channel)
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.option_menu, menu)
+
         return true
     }
 
@@ -91,15 +77,25 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.signOutBtn -> {
 
-                //findNavController(R.id.nav_host_fragment).navigate(R.id.action_destination_home_to_answerTest_fragment)
                 AuthUI.getInstance().signOut(this!!)
-                return true
-            }
-        }
+                /*var builder = NotificationCompat.Builder(this, CHANNEL_ID.toString())
+                    .setSmallIcon(R.drawable.ic_school)
+                    .setContentTitle("REPIT")
+                    .setContentText("Remember to repit")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    //.setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
 
+                with(NotificationManagerCompat.from(this)) {
+                    // notificationId is a unique int for each notification that you must define
+                    notify(notificationId, builder.build())
+                    return true
+                }*/
+            }
+
+        }
         return false
     }
-
     override fun onResume() {
         super.onResume()
 

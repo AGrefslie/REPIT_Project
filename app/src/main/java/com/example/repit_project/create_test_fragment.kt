@@ -38,6 +38,7 @@ import com.example.repit_project.RecyclerViewAdapter.QuestionListAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.fragment_create_test.*
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -49,12 +50,13 @@ class create_test_fragment : Fragment() {
 
     private lateinit var db : FirebaseFirestore
     private lateinit var collectionQuizes : CollectionReference
+    private lateinit var mStorageRef: FirebaseStorage
 
     private lateinit var quizTitle : String
     private lateinit var quizDescription : String
     private lateinit var quizImageUri : Uri
 
-    var quizPrivacey = false
+    private var quizPrivacey = false
 
     private lateinit var inputQuestion : String
     private lateinit var inputAnswer : String
@@ -65,8 +67,6 @@ class create_test_fragment : Fragment() {
 
     private val SELECT_PICTURE = 1
 
-    private var CHANNEL_ID = 0
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -74,6 +74,8 @@ class create_test_fragment : Fragment() {
 
         db = FirebaseFirestore.getInstance()
         collectionQuizes = db.collection("Quizes")
+        mStorageRef = FirebaseStorage.getInstance()
+
 
         deleteIcon = ContextCompat.getDrawable(this.requireContext(), R.drawable.ic_delete_small)!!
 
@@ -236,6 +238,16 @@ class create_test_fragment : Fragment() {
     }
 
     fun addQuizToFirestore() {
+        var file = quizImageUri
+        val mImageRef = mStorageRef.reference.child("images/${file.lastPathSegment}")
+        val uploadTask = mImageRef.putFile(file)
+
+        uploadTask.addOnFailureListener {
+
+        }.addOnSuccessListener {
+
+        }
+
         quizTitle = testTitle.text.toString()
         quizDescription = testDescription.text.toString()
 

@@ -2,12 +2,9 @@ package com.example.repit_project
 
 
 import android.app.Activity
-import android.app.PendingIntent
 import android.content.ContentValues.TAG
 import android.content.Intent
-import android.content.Intent.ACTION_PICK
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -16,18 +13,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.core.net.toUri
-import com.example.repit_project.Models.Quiz
 import com.example.repit_project.Models.UserDetail
 import com.example.repit_project.home_fragment.Companion.LOGTAG
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_user.*
 import java.io.IOException
+
 
 
 class user_fragment : Fragment() {
@@ -36,8 +32,11 @@ class user_fragment : Fragment() {
     private val firebaseUser = FirebaseAuth.getInstance().currentUser
     private val userPhoto = firebaseUser?.photoUrl
 
+    private var userBackImageUri : Uri = Uri.EMPTY
+
     private lateinit var db : FirebaseFirestore
     private lateinit var collectionUserDetails : CollectionReference
+    private lateinit var mStorageRef: FirebaseStorage
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +45,9 @@ class user_fragment : Fragment() {
 
         db = FirebaseFirestore.getInstance()
         collectionUserDetails = db.collection("UserDetails")
+        mStorageRef = FirebaseStorage.getInstance()
+
+        getUserDetailsFromFirestore()
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_user, container, false)
@@ -68,10 +70,20 @@ class user_fragment : Fragment() {
     }
 
     fun getUserDetailsFromFirestore () {
+        val picasso = Picasso.get()
         val docRef = collectionUserDetails.document(firebaseUser!!.uid)
         docRef.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                TODO("Trenger hjelp til å fylle lokale variabler fra FS")
+                val document = task.getResult()
+                if ( document != null){
+                    Log.d("ASDF", task.getResult()!!.getData().toString())
+                    val myUser = document.toObject(UserDetail::class.java)
+                    bio.setText(myUser?.bio)
+                    picasso.load(myUser?.imageUri).into(userBackImage)
+                }
+                else {
+                    Log.d("ASDF", "not null")
+                }
             } else {
                 Log.d(LOGTAG, "Error getting documents: " + task.exception)
             }
@@ -82,8 +94,9 @@ class user_fragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SELECT_PICTURE && resultCode == Activity.RESULT_OK) {
             try {
-                val uri = data!!.data
+                val uri = data?.data
                 userBackImage.setImageURI(uri)
+                userBackImageUri = uri!!
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -106,14 +119,32 @@ class user_fragment : Fragment() {
     }
 
     private fun saveDetails() {
-        var userDetail = UserDetail(userBackImage.toString(), bio.text.toString())
-        collectionUserDetails.document(firebaseUser!!.uid).set(userDetail).addOnSuccessListener { documentReference ->
-            Log.d(TAG, "DocumentSnapshot written with ID: ${firebaseUser.uid}")
-            Toast.makeText(context, "Details Saved", Toast.LENGTH_SHORT).show()
+
+        var file = userBackImageUri
+        val mImageRef = mStorageRef.reference.child("images/${file.lastPathSegment}")
+        val uploadTask = mImageRef.putFile(file)
+
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener {
+            Log.d("Upload: ", "Failure")
+        }.addOnSuccessListener {
+            Log.d("Upload: ", "Successful")
+            mImageRef.downloadUrl.addOnSuccessListener {
+                var userDetail = UserDetail(it.toString(), bio.text.toString())
+                collectionUserDetails.document(firebaseUser!!.uid).set(userDetail)
+                    .addOnSuccessListener { documentReference ->
+                        Log.d(TAG, "DocumentSnapshot written with ID: ${firebaseUser.uid}")
+                        Toast.makeText(context, "Details Saved", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error adding document", e)
+                    }
+            }
         }
-        .addOnFailureListener { e ->
-            Log.w(TAG, "Error adding document", e)
-        }
+
+        Log.d("ASDF", userBackImage.resources.toString())
+
+
     }
 
     override fun onResume() {
