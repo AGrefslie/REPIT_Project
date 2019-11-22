@@ -9,6 +9,7 @@
     android:clipToPadding="false"
     android:background="#e6e6e6">
 
+
     <ImageView
         android:id="@+id/quiz_image"
         android:layout_width="match_parent"

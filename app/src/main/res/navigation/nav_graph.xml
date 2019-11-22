@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_destination_home_to_destination_createTest"
             app:destination="@id/destination_createTest" />
+        <action
+            android:id="@+id/action_destination_home_to_edit_test_fragment"
+            app:destination="@id/edit_test_fragment" />
     </fragment>
     <fragment
         android:id="@+id/destination_user"
@@ -60,6 +63,17 @@
             android:defaultValue="0" />
         <action
             android:id="@+id/action_quizFeedback_to_destination_home"
+            app:destination="@id/destination_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/edit_test_fragment"
+        android:name="com.example.repit_project.edit_test_fragment"
+        android:label="edit_test_fragment" >
+        <argument
+            android:name="documentId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_edit_test_fragment_to_destination_home"
             app:destination="@id/destination_home" />
     </fragment>
 </navigation>

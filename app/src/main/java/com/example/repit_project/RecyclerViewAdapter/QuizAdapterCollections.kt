@@ -1,13 +1,11 @@
 package com.example.repit_project.RecyclerViewAdapter
 
 
-import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -23,10 +21,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.layout_listitem.view.*
 
-class QuizAdapter(private val list: MutableList<Quiz>, whichFragment : Int) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-
+class QuizAdapterCollections(private val list: MutableList<Quiz>, whichFragment : Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var removedPosition: Int = 0
     private var removedItem: Quiz = Quiz()
@@ -43,7 +38,7 @@ class QuizAdapter(private val list: MutableList<Quiz>, whichFragment : Int) :
         collectionQuizes = db.collection("Quizes")
 
         return QuizViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.layout_listitem, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.layout_listitem_collections, parent, false)
         )
 
     }
@@ -67,14 +62,6 @@ class QuizAdapter(private val list: MutableList<Quiz>, whichFragment : Int) :
                         findNavController(view).navigate(action)
                     }
 
-                }
-
-                holder.itemView.setOnLongClickListener {
-
-                    val action = home_fragmentDirections.actionDestinationHomeToEditTestFragment(list[position].uid)
-                    findNavController(it).navigate(action)
-
-                    return@setOnLongClickListener true
                 }
             }
         }
@@ -133,5 +120,4 @@ class QuizAdapter(private val list: MutableList<Quiz>, whichFragment : Int) :
                 .into(quizImage)
         }
     }
-
 }

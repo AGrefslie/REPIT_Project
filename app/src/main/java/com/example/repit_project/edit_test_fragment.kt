@@ -34,19 +34,26 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.repit_project.Models.Question
 import com.example.repit_project.Models.Quiz
+import com.example.repit_project.Models.UserDetail
 import com.example.repit_project.RecyclerViewAdapter.QuestionListAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_create_test.*
+import kotlinx.android.synthetic.main.fragment_create_test.addQuestionBtn
+import kotlinx.android.synthetic.main.fragment_create_test.viewQuestionsBtn
+import kotlinx.android.synthetic.main.fragment_edit_test.*
+import kotlinx.android.synthetic.main.fragment_user.*
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class create_test_fragment : Fragment() {
+class edit_test_fragment : Fragment() {
 
     private lateinit var db : FirebaseFirestore
     private lateinit var collectionQuizes : CollectionReference
@@ -62,6 +69,10 @@ class create_test_fragment : Fragment() {
     private lateinit var inputAnswer : String
     private lateinit var questionList : ArrayList<Question>
 
+    private lateinit var editQuizObject : Quiz
+
+    private lateinit var documentId : String
+
     private var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
     private lateinit var deleteIcon: Drawable
 
@@ -76,13 +87,15 @@ class create_test_fragment : Fragment() {
         collectionQuizes = db.collection("Quizes")
         mStorageRef = FirebaseStorage.getInstance()
 
-
         deleteIcon = ContextCompat.getDrawable(this.requireContext(), R.drawable.ic_delete_small)!!
 
-        questionList = ArrayList()
+        documentId = edit_test_fragmentArgs.fromBundle(arguments!!).documentId
+        Log.d("did",documentId)
+
+        getDataFromFireStore()
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_test, container, false)
+        return inflater.inflate(R.layout.fragment_edit_test, container, false)
         
     }
 
@@ -98,18 +111,37 @@ class create_test_fragment : Fragment() {
         }
 
         quizImageUri = (R.drawable.ic_launcher_foreground.toString().toUri())
-        addImageBtn.setOnClickListener {
+        updateImageBtn.setOnClickListener {
             addQuizImage()
         }
 
-        fabCreateTest.setOnClickListener {
+        fabEditTest.setOnClickListener {
             addQuizToFirestore()
         }
 
-        publicSwitch.setOnCheckedChangeListener() { _, isChecked ->
-            if (isChecked) {
-                quizPrivacey = true
+    }
+
+    private fun getDataFromFireStore() {
+        val picasso = Picasso.get()
+        val docRef = collectionQuizes.document(documentId)
+        docRef.get().addOnCompleteListener { task ->
+            val document = task.getResult()
+            if ( document != null){
+                if (task.isSuccessful) {
+                    val thisQuiz = document.toObject(Quiz::class.java)
+                    editTestTitle.setText(thisQuiz?.title)
+                    editTestDescription.setText(thisQuiz?.description)
+                    picasso.load(thisQuiz?.image).into(updateCoverImage)
+                    questionList = thisQuiz?.questions as ArrayList<Question>
+                }
+                else {
+                    Log.d(home_fragment.LOGTAG, "Error getting documents: " + task.exception)
+                }
             }
+            else {
+                Log.d("ASDF", "not null")
+            }
+
         }
     }
 
@@ -221,9 +253,9 @@ class create_test_fragment : Fragment() {
             try {
                 val uri = data!!.data
                 quizImageUri = uri!!
-                coverImage.setImageURI(uri)
-                coverImage.isVisible = true
-                addTestImageText.isVisible = false
+                updateCoverImage.setImageURI(uri)
+                updateCoverImage.isVisible = true
+                editTestImageText.isVisible = false
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -238,43 +270,45 @@ class create_test_fragment : Fragment() {
     }
 
     fun addQuizToFirestore() {
-
         val firebaseUser = FirebaseAuth.getInstance().currentUser
-        quizTitle = testTitle.text.toString()
-        quizDescription = testDescription.text.toString()
+        quizTitle = editTestTitle.text.toString()
+        quizDescription = editTestDescription.text.toString()
 
-        var file = quizImageUri
-        val mImageRef = mStorageRef.reference.child("images/${file.lastPathSegment}")
-        val uploadTask = mImageRef.putFile(file)
-
-        uploadTask.addOnFailureListener {
-            Log.d("Upload: ", "Failure")
-        }.addOnSuccessListener {
-
-            mImageRef.downloadUrl.addOnSuccessListener {
-
-                val mQuiz = Quiz(
-                    "0",
-                    quizTitle,
-                    quizDescription,
-                    it.toString(),
-                    quizPrivacey,
-                    questionList,
-                    firebaseUser!!.uid
-                )
-
-                collectionQuizes.add(mQuiz)
-                    .addOnSuccessListener { documentReference ->
-                        Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
-                    }
-                    .addOnFailureListener { e ->
-                        Log.w(TAG, "Error adding document", e)
-                    }
+        editPublicSwitch.setOnCheckedChangeListener() { _, isChecked ->
+            if (isChecked) {
+                quizPrivacey = true
             }
         }
 
+        val docRef = collectionQuizes.document(documentId)
+        docRef.get().addOnCompleteListener { task ->
+            val document = task.getResult()
+            val thisQuiz = document?.toObject(Quiz::class.java)
 
-        val action = create_test_fragmentDirections.actionDestinationCreateTestToDestinationHome()
+            val mQuiz = Quiz("0", quizTitle, quizDescription, thisQuiz!!.image, quizPrivacey, questionList, firebaseUser!!.uid)
+
+            var file = quizImageUri
+            val mImageRef = mStorageRef.reference.child("images/${file.lastPathSegment}")
+            val uploadTask = mImageRef.putFile(file)
+
+            uploadTask.addOnFailureListener {
+                Log.d("Upload: ", "Failed: $it")
+            }.addOnSuccessListener {
+                mQuiz.image = it.toString()
+            }
+
+            collectionQuizes.document(documentId).set(mQuiz, SetOptions.merge())
+                .addOnSuccessListener { documentReference ->
+                    Log.d(TAG, "DocumentSnapshot written with ID: $documentId")
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error adding document", e)
+                }
+        }
+
+
+
+        val action = edit_test_fragmentDirections.actionEditTestFragmentToDestinationHome()
         findNavController().navigate(action)
 
     }

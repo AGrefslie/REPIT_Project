@@ -5,7 +5,7 @@ import com.google.firebase.firestore.Exclude
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Quiz(@get:Exclude var uid: String = "0",
+data class Quiz(@get:Exclude var uid: String = "",
                 var title: String = "",
                 var description: String = "",
                 var image: String = "",

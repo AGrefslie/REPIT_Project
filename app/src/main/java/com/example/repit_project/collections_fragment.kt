@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.repit_project.Models.Quiz
 import com.example.repit_project.RecyclerViewAdapter.QuizAdapter
+import com.example.repit_project.RecyclerViewAdapter.QuizAdapterCollections
 import com.example.repit_project.home_fragment.Companion.LOGTAG
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentChange
@@ -46,8 +47,8 @@ class collections_fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recycler_view.adapter = QuizAdapter(quizList, 2)
-        recycler_view.layoutManager = LinearLayoutManager(activity) //GridLayoutManager(context, 2)
+        recycler_view.adapter = QuizAdapterCollections(quizList, 2)
+        recycler_view.layoutManager = GridLayoutManager(context, 2)
     }
 
     private fun createFireStoreReadListner() {
@@ -114,8 +115,8 @@ class collections_fragment : Fragment() {
 
         }
 
-        recycler_view.adapter = QuizAdapter(searchedQuizList, 2)
-        recycler_view.layoutManager = LinearLayoutManager(activity)
+        recycler_view.adapter = QuizAdapterCollections(searchedQuizList, 2)
+        recycler_view.layoutManager = GridLayoutManager(context, 2)
     }
 
     override fun onResume() {

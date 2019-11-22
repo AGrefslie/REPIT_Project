@@ -130,7 +130,9 @@ class user_fragment : Fragment() {
         }.addOnSuccessListener {
             Log.d("Upload: ", "Successful")
             mImageRef.downloadUrl.addOnSuccessListener {
+
                 var userDetail = UserDetail(it.toString(), bio.text.toString())
+
                 collectionUserDetails.document(firebaseUser!!.uid).set(userDetail)
                     .addOnSuccessListener { documentReference ->
                         Log.d(TAG, "DocumentSnapshot written with ID: ${firebaseUser.uid}")
