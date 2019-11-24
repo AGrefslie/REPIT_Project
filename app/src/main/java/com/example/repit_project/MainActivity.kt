@@ -1,9 +1,6 @@
 package com.example.repit_project
 
-import android.app.Activity
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -12,20 +9,13 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
-import androidx.navigation.NavHost
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_user.*
-import kotlinx.android.synthetic.main.layout_listitem.*
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -49,7 +39,20 @@ class MainActivity : AppCompatActivity() {
 
         createNotificationChannel()
 
+        super.onStart()
+
+        var calendar = Calendar.getInstance()
+        val intent = Intent(applicationContext, Notification_reciver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(applicationContext, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        calendar.set(Calendar.HOUR_OF_DAY,17)
+        calendar.set(Calendar.MINUTE, 30)
+        calendar.set(Calendar.SECOND, 59)
+
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
     }
+
 
     private fun createNotificationChannel() {
 
