@@ -52,6 +52,8 @@ class create_test_fragment : Fragment() {
     private lateinit var collectionQuizes : CollectionReference
     private lateinit var mStorageRef: FirebaseStorage
 
+    private lateinit var mQuiz : Quiz
+
     private lateinit var quizTitle : String
     private lateinit var quizDescription : String
     private lateinit var quizImageUri : Uri
@@ -247,32 +249,24 @@ class create_test_fragment : Fragment() {
         val mImageRef = mStorageRef.reference.child("images/${file.lastPathSegment}")
         val uploadTask = mImageRef.putFile(file)
 
+        mQuiz = Quiz("0", quizTitle, quizDescription, file.toString(), quizPrivacey, questionList, firebaseUser!!.uid)
+
         uploadTask.addOnFailureListener {
             Log.d("Upload: ", "Failure")
         }.addOnSuccessListener {
 
             mImageRef.downloadUrl.addOnSuccessListener {
-
-                val mQuiz = Quiz(
-                    "0",
-                    quizTitle,
-                    quizDescription,
-                    it.toString(),
-                    quizPrivacey,
-                    questionList,
-                    firebaseUser!!.uid
-                )
-
-                collectionQuizes.add(mQuiz)
-                    .addOnSuccessListener { documentReference ->
-                        Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
-                    }
-                    .addOnFailureListener { e ->
-                        Log.w(TAG, "Error adding document", e)
-                    }
+                mQuiz.image = it.toString()
             }
         }
 
+        collectionQuizes.add(mQuiz)
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
 
         val action = create_test_fragmentDirections.actionDestinationCreateTestToDestinationHome()
         findNavController().navigate(action)
