@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.core.net.toUri
 import com.example.repit_project.Models.UserDetail
 import com.example.repit_project.home_fragment.Companion.LOGTAG
 import com.firebase.ui.auth.AuthUI
@@ -79,6 +80,7 @@ class user_fragment : Fragment() {
                     Log.d("ASDF", task.getResult()!!.getData().toString())
                     val myUser = document.toObject(UserDetail::class.java)
                     bio.setText(myUser?.bio)
+                    userBackImageUri = myUser.toString().toUri()
                     picasso.load(myUser?.imageUri).into(userBackImage)
                 }
                 else {

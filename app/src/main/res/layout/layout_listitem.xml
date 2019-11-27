@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item_view"
@@ -7,7 +8,8 @@
     android:layout_margin="10dp"
     android:outlineProvider="bounds"
     android:clipToPadding="false"
-    android:background="#e6e6e6">
+    android:background="#e6e6e6"
+    android:elevation="10dp">
 
 
     <ImageView
@@ -49,5 +51,6 @@
         android:textColor="@color/colorPrimary"
         android:background="#fff"
         android:padding="10dp"
+        android:elevation="10dp"
         android:text="@string/start_test" />
 </RelativeLayout>

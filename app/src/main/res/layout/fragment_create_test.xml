@@ -10,69 +10,54 @@
 
     <TextView
         android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="CREATE NEW TEST"
-        android:textColor="@color/colorPrimary"
-        android:padding="20dp"
-        android:textSize="30sp" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_below="@+id/header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="ADD A TEST TITLE" />
+        android:text="@string/create_new_test"
+        android:textColor="@color/colorPrimary"
+        android:padding="20dp"
+        android:textSize="24sp" />
 
     <Switch
         android:id="@+id/publicSwitch"
         android:layout_width="wrap_content"
         android:layout_margin="20dp"
-        android:layout_below="@id/header"
-        android:layout_alignParentRight="true"
+        android:layout_toEndOf="@+id/header"
+        android:layout_alignParentEnd="true"
         android:gravity="end"
         android:layout_height="wrap_content"
-        android:text="Public" />
+        android:text="@string/publicText" />
 
 
     <EditText
         android:id="@+id/testTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
+        android:layout_below="@+id/header"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:ems="10"
-        android:hint="Test Title..."
+        android:hint="@string/add_test_title"
         android:inputType="textPersonName" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/testTitle"
-        android:layout_margin="20dp"
-        android:text="ADD DESCRIPTION TO TEST" />
 
     <EditText
         android:id="@+id/testDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView4"
+        android:layout_below="@+id/testTitle"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginBottom="20dp"
         android:ems="10"
-        android:hint="Test Description..."
-        android:inputType="textPersonName" />
+        android:hint="@string/test_description"
+        android:inputType="textPersonName"
+        android:autofillHints="" />
 
     <TextView
         android:id="@+id/addTestImageText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ADD TEST IMAGE"
+        android:text="@string/add_test_image"
         android:background="@color/colorPrimary"
         android:textColor="@android:color/white"
         android:padding="20dp"
@@ -86,15 +71,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/testDescription"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="40dp"
-        android:text="ADD IMAGE" />
+        android:text="@string/add_image" />
 
     <ImageView
         android:id="@+id/coverImage"
+        android:contentDescription="@string/test_cover_image"
         android:layout_width="180dp"
         android:layout_height="85dp"
+        android:elevation="10dp"
         android:layout_below="@+id/testDescription"
         android:layout_marginBottom="20dp"
         android:layout_marginStart="25dp"
@@ -109,7 +96,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/coverImage"
         android:layout_margin="20dp"
-        android:text="ADD QUESTION TO TEST" />
+        android:text="@string/add_question_to_test" />
 
     <Button
         android:id="@+id/addQuestionBtn"
@@ -117,7 +104,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView6"
         android:layout_marginStart="20dp"
-        android:text="ADD QUESTION" />
+        android:text="@string/add_question" />
 
 
     <Button
@@ -125,17 +112,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView6"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginEnd="20dp"
-        android:text="View Questions" />
+        android:text="@string/view_questions" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabCreateTest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_margin="20dp"
-        android:src="@drawable/ic_check" />
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_check"
+        android:focusable="true" />
 </RelativeLayout>

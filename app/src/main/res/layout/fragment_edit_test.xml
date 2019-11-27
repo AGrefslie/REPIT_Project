@@ -10,57 +10,43 @@
 
     <TextView
         android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="EDIT TEST"
-        android:textColor="@color/colorPrimary"
-        android:padding="20dp"
-        android:textSize="30sp" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_below="@+id/header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="EDIT TEST TITLE" />
+        android:text="@string/edit_test"
+        android:textColor="@color/colorPrimary"
+        android:padding="20dp"
+        android:textSize="24sp" />
+
 
     <Switch
         android:id="@+id/editPublicSwitch"
         android:layout_width="wrap_content"
         android:layout_margin="20dp"
-        android:layout_below="@id/header"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:gravity="end"
         android:layout_height="wrap_content"
-        android:text="Public" />
+        android:text="@string/publicText" />
 
 
     <EditText
         android:id="@+id/editTestTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
+        android:layout_below="@+id/header"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:ems="10"
-        android:hint="Test Title..."
+        android:hint="@string/edit_test_title"
         android:inputType="textPersonName" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/editTestTitle"
-        android:layout_margin="20dp"
-        android:text="EDIT TEST DESCRIPTION" />
+
 
     <EditText
         android:id="@+id/editTestDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView4"
+        android:layout_below="@+id/editTestTitle"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginBottom="20dp"
@@ -96,6 +82,7 @@
         android:id="@+id/updateCoverImage"
         android:layout_width="180dp"
         android:layout_height="85dp"
+        android:elevation="10dp"
         android:layout_below="@+id/editTestDescription"
         android:layout_marginBottom="20dp"
         android:layout_marginStart="25dp"

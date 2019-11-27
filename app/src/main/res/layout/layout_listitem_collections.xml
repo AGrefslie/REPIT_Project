@@ -7,7 +7,8 @@
     android:background="#e6e6e6"
     android:orientation="vertical"
     android:clipToPadding="false"
-    android:outlineProvider="bounds">
+    android:outlineProvider="bounds"
+    android:elevation="10dp">
 
     <ImageView
         android:id="@+id/quiz_image"

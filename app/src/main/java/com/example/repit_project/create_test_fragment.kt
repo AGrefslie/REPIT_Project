@@ -39,10 +39,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.livinglifetechway.quickpermissions_kotlin.runWithPermissions
 import kotlinx.android.synthetic.main.fragment_create_test.*
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -151,8 +150,14 @@ class create_test_fragment : Fragment() {
 
         val Builder = AlertDialog.Builder(context)
             .setView(DialogView)
-            .setTitle("Here is list of all your questions")
-            .setMessage("Swipe left to delete a question")
+                if (questionList.size == 0) {
+                    Builder.setTitle("No questions added")
+                    Builder.setMessage("You have not added any questions yet. Click the 'Add Question' button to add a question")
+                } else {
+                    Builder.setTitle("Here is list of all your questions")
+                    Builder.setMessage("Swipe left to delete a question")
+                }
+
 
         val mYrecylerView = DialogView.findViewById<RecyclerView>(R.id.recycler_view_questions)
 
@@ -232,7 +237,7 @@ class create_test_fragment : Fragment() {
         }
     }
 
-    fun addQuizImage() {
+    fun addQuizImage() = runWithPermissions(android.Manifest.permission.READ_EXTERNAL_STORAGE) {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT

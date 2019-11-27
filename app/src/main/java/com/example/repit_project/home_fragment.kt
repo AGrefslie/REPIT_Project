@@ -95,7 +95,6 @@ class home_fragment : Fragment() {
                 }
 
                 swipeBackground.draw(c)
-
                 c.save()
 
                 if (dX < 0 ) {
@@ -103,11 +102,8 @@ class home_fragment : Fragment() {
                 }
 
                 deleteIcon.draw(c)
-
                 c.restore()
             }
-
-
         }
 
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)

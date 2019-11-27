@@ -33,6 +33,7 @@
         android:contentDescription="@string/userImage"
         android:padding="3sp"
         android:scaleType="centerCrop"
+        android:elevation="10dp"
         app:layout_constraintBottom_toTopOf="@+id/userName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.79"

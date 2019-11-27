@@ -41,13 +41,9 @@ class MainActivity : AppCompatActivity() {
 
         super.onStart()
 
-        var calendar = Calendar.getInstance()
+        val calendar = Calendar.getInstance()
         val intent = Intent(applicationContext, Notification_reciver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(applicationContext, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-        calendar.set(Calendar.HOUR_OF_DAY,17)
-        calendar.set(Calendar.MINUTE, 30)
-        calendar.set(Calendar.SECOND, 59)
 
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
@@ -81,19 +77,6 @@ class MainActivity : AppCompatActivity() {
             R.id.signOutBtn -> {
 
                 AuthUI.getInstance().signOut(this!!)
-                /*var builder = NotificationCompat.Builder(this, CHANNEL_ID.toString())
-                    .setSmallIcon(R.drawable.ic_school)
-                    .setContentTitle("REPIT")
-                    .setContentText("Remember to repit")
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    //.setContentIntent(pendingIntent)
-                    .setAutoCancel(true)
-
-                with(NotificationManagerCompat.from(this)) {
-                    // notificationId is a unique int for each notification that you must define
-                    notify(notificationId, builder.build())
-                    return true
-                }*/
             }
 
         }
@@ -122,7 +105,6 @@ class MainActivity : AppCompatActivity() {
                             AuthUI.IdpConfig.GoogleBuilder().build(),
                             AuthUI.IdpConfig.EmailBuilder().build()))
                         .setIsSmartLockEnabled(false)
-                        .setLogo(R.mipmap.ic_launcher)
                         .build(), RC_SIGN_IN
                 )
             }

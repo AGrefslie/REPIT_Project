@@ -6,6 +6,7 @@
     android:layout_margin="5sp"
     android:outlineProvider="bounds"
     android:clipToPadding="false"
+    android:elevation="10dp"
     android:background="#8ee2b0">
 
     <TextView

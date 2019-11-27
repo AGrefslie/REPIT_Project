@@ -20,6 +20,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
+import android.widget.Switch
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
@@ -41,6 +42,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
+import com.livinglifetechway.quickpermissions_kotlin.runWithPermissions
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_create_test.*
 import kotlinx.android.synthetic.main.fragment_create_test.addQuestionBtn
@@ -68,8 +70,6 @@ class edit_test_fragment : Fragment() {
     private lateinit var inputQuestion : String
     private lateinit var inputAnswer : String
     private lateinit var questionList : ArrayList<Question>
-
-    private lateinit var editQuizObject : Quiz
 
     private lateinit var documentId : String
 
@@ -119,6 +119,14 @@ class edit_test_fragment : Fragment() {
             addQuizToFirestore()
         }
 
+        editPublicSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                quizPrivacey = true
+            } else {
+                quizPrivacey = false
+            }
+        }
+
     }
 
     private fun getDataFromFireStore() {
@@ -132,7 +140,11 @@ class edit_test_fragment : Fragment() {
                     editTestTitle.setText(thisQuiz?.title)
                     editTestDescription.setText(thisQuiz?.description)
                     picasso.load(thisQuiz?.image).into(updateCoverImage)
-                    questionList = thisQuiz?.questions as ArrayList<Question>
+                    quizImageUri = thisQuiz!!.image.toUri()
+                    if (thisQuiz.public == true) {
+                        editPublicSwitch.isChecked = true
+                    }
+                    questionList = thisQuiz.questions as ArrayList<Question>
                 }
                 else {
                     Log.d(home_fragment.LOGTAG, "Error getting documents: " + task.exception)
@@ -262,7 +274,7 @@ class edit_test_fragment : Fragment() {
         }
     }
 
-    fun addQuizImage() {
+    fun addQuizImage() = runWithPermissions(android.Manifest.permission.READ_EXTERNAL_STORAGE) {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
@@ -271,33 +283,33 @@ class edit_test_fragment : Fragment() {
 
     fun addQuizToFirestore() {
         val firebaseUser = FirebaseAuth.getInstance().currentUser
+
         quizTitle = editTestTitle.text.toString()
         quizDescription = editTestDescription.text.toString()
-
-        editPublicSwitch.setOnCheckedChangeListener() { _, isChecked ->
-            if (isChecked) {
-                quizPrivacey = true
-            }
-        }
 
         val docRef = collectionQuizes.document(documentId)
         docRef.get().addOnCompleteListener { task ->
             val document = task.getResult()
             val thisQuiz = document?.toObject(Quiz::class.java)
 
-            val mQuiz = Quiz("0", quizTitle, quizDescription, thisQuiz!!.image, quizPrivacey, questionList, firebaseUser!!.uid)
 
-            var file = quizImageUri
-            val mImageRef = mStorageRef.reference.child("images/${file.lastPathSegment}")
-            val uploadTask = mImageRef.putFile(file)
+            val myQuiz = Quiz("0", quizTitle, quizDescription, quizImageUri.toString(), quizPrivacey, questionList, firebaseUser!!.uid)
 
-            uploadTask.addOnFailureListener {
-                Log.d("Upload: ", "Failed: $it")
-            }.addOnSuccessListener {
-                mQuiz.image = it.toString()
+
+            if (quizImageUri.toString() != thisQuiz?.image.toString()) {
+                val file = quizImageUri
+                val mImageRef = mStorageRef.reference.child("images/${file.lastPathSegment}")
+                val UploadTask = mImageRef.putFile(file)
+
+                UploadTask.addOnSuccessListener {
+                    myQuiz.image = it.toString()
+                }.addOnFailureListener {
+                    Log.d("Upload: ", "Failed: $it")
+                    myQuiz.image = thisQuiz?.image.toString()
+                }
             }
 
-            collectionQuizes.document(documentId).set(mQuiz, SetOptions.merge())
+            collectionQuizes.document(documentId).set(myQuiz, SetOptions.merge())
                 .addOnSuccessListener { documentReference ->
                     Log.d(TAG, "DocumentSnapshot written with ID: $documentId")
                 }

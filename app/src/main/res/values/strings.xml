@@ -19,4 +19,16 @@
     <string name="generate_test_data">Generate Test Data</string>
     <string name="channel_name">Repit-Channel</string>
     <string name="channel_description">Repit-Basic-NotificationChannel</string>
+    <string name="create_new_test">CREATE NEW TEST</string>
+    <string name="publicText">Public</string>
+    <string name="add_test_title">Add Test Title...</string>
+    <string name="test_description">Test Description...</string>
+    <string name="add_test_image">ADD TEST IMAGE</string>
+    <string name="add_image">ADD IMAGE</string>
+    <string name="test_cover_image">Test cover image</string>
+    <string name="add_question_to_test">ADD QUESTION TO TEST</string>
+    <string name="add_question">ADD QUESTION</string>
+    <string name="view_questions">View Questions</string>
+    <string name="edit_test">EDIT TEST</string>
+    <string name="edit_test_title">Edit Test Title...</string>
 </resources>
